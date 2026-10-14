@@ -1594,7 +1594,7 @@
     <div class="modal-title" id="otp-title">Supervisor <span>Approval</span></div>
 
     <div id="otp-step-pick">
-      <p class="otp-desc" id="otp-pick-desc">Choose a supervisor. They'll get a 4-digit code by text — ask them for it to continue.</p>
+      <p class="otp-desc" id="otp-pick-desc">Choose a supervisor. They'll get a 4-digit code — ask them for it to continue.</p>
       <div class="otp-sup-list" id="otp-sup-list"></div>
     </div>
 
@@ -3531,8 +3531,7 @@ function sendToSheets(eventType, data) {
 const OTP_URL = SHEETS_URL; // codes are handled by the same Apps Script
 const OTP_SUPERVISORS = [
   { id: '1', name: 'Anmol' },
-  { id: '2', name: 'Avtar' },
-  { id: '3', name: 'Sandy' }
+  { id: '2', name: 'Avtar' }
 ];
 const otp = { type: null, onApproved: null, sup: null, rid: null, busy: false, resendTimer: null };
 let otpApprovalToken = ''; // one-time proof of approval, sent with the clock event
@@ -3549,8 +3548,26 @@ function otpCall(params) {
   const ctrl = ('AbortController' in window) ? new AbortController() : null;
   const t = ctrl ? setTimeout(() => ctrl.abort(), 20000) : null;
   return fetch(OTP_URL + '?' + qs, { method: 'GET', cache: 'no-store', signal: ctrl ? ctrl.signal : undefined })
-    .then(r => r.json())
+    .then(r => r.text())
+    .then(txt => {
+      let j;
+      try { j = JSON.parse(txt); } catch (e) {
+        const err = new Error('bad_response'); err.kind = 'bad_response';
+        err.detail = (txt.match(/<title>([^<]*)<\/title>/i) || [])[1] || txt.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 120);
+        throw err;
+      }
+      // Old script still deployed: it answers every GET with {status:'ok'}
+      if (j && j.ok === undefined && j.status === 'ok') { const err = new Error('old_script'); err.kind = 'old_script'; throw err; }
+      return j;
+    })
     .finally(() => { if (t) clearTimeout(t); });
+}
+function otpErrorText(e) {
+  if (e && e.kind === 'old_script') return 'Approval codes aren\'t switched on yet — the updated Apps Script hasn\'t been deployed as a new version. Please tell your manager.';
+  if (e && e.kind === 'bad_response') return 'The approval server isn\'t set up correctly' + (e.detail ? ' (' + e.detail + ')' : '') + '. Please tell your manager.';
+  if (e && e.name === 'AbortError') return 'The approval server took too long to answer. Please try again.';
+  if (navigator.onLine === false) return 'No connection. Check your signal and try again.';
+  return 'Couldn\'t reach the approval server (' + ((e && e.message) || 'network error') + '). Please try again.';
 }
 function otpStatus(msg, kind) {
   const el = document.getElementById('otp-status');
@@ -3600,15 +3617,16 @@ function otpRequest() {
       const err = res && res.error;
       const msg = err === 'cooldown' ? 'Please wait ' + (res.wait || 30) + ' seconds before requesting another code.'
         : err === 'too_many' ? 'Too many code requests. Please wait a while or call your supervisor.'
-        : err === 'sms_failed' ? 'Couldn\'t text ' + otp.sup.name + '. Try another supervisor.'
-        : 'Something went wrong. Please try again.';
+        : err === 'sms_failed' ? 'Couldn\'t send the code to ' + otp.sup.name + '. Try another supervisor.'
+        : err === 'server' ? 'Approval server error: ' + (res.message || 'unknown') + '. Please tell your manager.'
+        : 'Something went wrong (' + (err || 'unknown') + '). Please try again.';
       otpStatus(msg, 'err');
       document.querySelectorAll('.otp-sup').forEach(b => b.disabled = false);
       document.getElementById('otp-resend').disabled = false;
     })
-    .catch(() => {
+    .catch(e => {
       otp.busy = false;
-      otpStatus('No connection. Check your signal and try again.', 'err');
+      otpStatus(otpErrorText(e), 'err');
       document.querySelectorAll('.otp-sup').forEach(b => b.disabled = false);
       document.getElementById('otp-resend').disabled = false;
     });
@@ -3617,7 +3635,7 @@ function otpShowCode() {
   document.getElementById('otp-step-pick').style.display = 'none';
   document.getElementById('otp-step-code').style.display = '';
   document.getElementById('otp-code-desc').innerHTML =
-    'A 4-digit code was texted to <strong>' + otp.sup.name + '</strong>. Ask them for it and enter it below. It expires in 5 minutes.';
+    'A 4-digit code was sent to <strong>' + otp.sup.name + '</strong>. Ask them for it and enter it below. It expires in 5 minutes.';
   const inp = document.getElementById('otp-input');
   inp.value = ''; otpPaint();
   document.getElementById('otp-msg').textContent = ''; document.getElementById('otp-msg').className = 'otp-msg';
@@ -3689,9 +3707,9 @@ function otpVerify() {
         msg.textContent = 'Something went wrong. Please try again.';
       }
     })
-    .catch(() => {
+    .catch(e => {
       otp.busy = false; otpPaint();
-      msg.className = 'otp-msg err'; msg.textContent = 'No connection. Check your signal and try again.';
+      msg.className = 'otp-msg err'; msg.textContent = otpErrorText(e);
     });
 }
 function otpCancel() {
