@@ -1380,6 +1380,11 @@
   .sr-kind { font-size:13px; color:var(--white-muted); flex-shrink:0; }
   .sr-kind.warn { color:var(--gold); }
   .search-results .home-label { padding-top:14px; }
+  .sync-row { display:flex; align-items:center; gap:10px; width:100%; min-height:48px; padding:10px 14px; border-radius:14px; border:1px solid var(--line); background:var(--surface); color:var(--white); text-align:left; cursor:pointer; }
+  .sync-dot { width:8px; height:8px; border-radius:50%; background:var(--white-muted); flex-shrink:0; }
+  .sync-dot.ok { background:var(--success); } .sync-dot.err { background:var(--danger); } .sync-dot.busy { background:var(--gold); animation:blink 1.2s ease infinite; }
+  .sync-text { flex:1; min-width:0; font-size:13px; color:#B9C2D2; }
+  .sync-act { font-size:13px; color:var(--gold); flex-shrink:0; }
   .home-foot { text-align:center; font-size:11px; letter-spacing:0.12em; color:#5A6880; text-transform:uppercase; padding-top:10px; }
 
   /* Drawer shell */
@@ -2945,6 +2950,12 @@
         <div class="home-label">Next up</div>
         <div class="timeline" id="homeNextUp"></div>
       </div>
+
+      <button class="sync-row" id="homeSync" onclick="syncClientsFromSheets(true)">
+        <span class="sync-dot" id="homeSyncDot"></span>
+        <span class="sync-text" id="homeSyncText">Connecting to Google Sheets…</span>
+        <span class="sync-act">Sync now</span>
+      </button>
     </div>
     <div class="home-foot">Pi Admin · v2.1.1</div>
   </div>
@@ -3118,6 +3129,50 @@ function renderMenuCounts() {
   } catch (e) {}
 }
 document.addEventListener('DOMContentLoaded', () => { try { renderHome(); renderMenuCounts(); } catch (e) {} });
+
+// ── Google Sheets auto-sync (v2.1.1) ──
+// Pulls the client list from your Apps Script as soon as the app opens and
+// every 5 minutes, so Home, Jobs Done and Clients always show live data.
+let piSyncBusy = false;
+function piSetSync(state, text) {
+  const dot = document.getElementById('homeSyncDot'), t = document.getElementById('homeSyncText');
+  if (!dot || !t) return;
+  dot.className = 'sync-dot ' + state; t.textContent = text;
+}
+async function syncClientsFromSheets(manual) {
+  if (piSyncBusy) return;
+  const url = getGsUrl();
+  if (!url) { piSetSync('err', 'No Google Sheets link set'); return; }
+  piSyncBusy = true;
+  piSetSync('busy', 'Syncing with Google Sheets…');
+  const ctrl = ('AbortController' in window) ? new AbortController() : null;
+  const timer = ctrl ? setTimeout(() => ctrl.abort(), 25000) : null;
+  try {
+    const resp = await fetch(url + '?action=getClients', { cache: 'no-store', signal: ctrl ? ctrl.signal : undefined });
+    const txt = await resp.text();
+    let data; try { data = JSON.parse(txt); } catch (e) { throw new Error('Sheets sent back an unexpected page'); }
+    if (!data || !Array.isArray(data.clients)) throw new Error(data && data.error ? data.error : 'No client list in reply');
+    allClients = data.clients.map(normaliseDates);
+    localStorage.setItem(CLIENTS_CACHE_KEY, JSON.stringify(allClients));
+    try { renderClients(); } catch (e) {}
+    try { if (document.getElementById('panel-jobs').classList.contains('active')) renderJobsDoneList(); } catch (e) {}
+    updateDueBadge();
+    const tm = new Date().toLocaleTimeString('en-AU', { hour: 'numeric', minute: '2-digit' });
+    piSetSync('ok', `Google Sheets · ${allClients.length} clients · synced ${tm}`);
+    if (manual) showGsToast(`✅ Synced — ${allClients.length} clients loaded.`, 'success');
+  } catch (e) {
+    const why = (e && e.name === 'AbortError') ? 'took too long' : (e && e.message) || 'network error';
+    piSetSync('err', `Couldn’t reach Google Sheets (${why}) · tap to retry`);
+  } finally {
+    if (timer) clearTimeout(timer);
+    piSyncBusy = false;
+  }
+}
+document.addEventListener('DOMContentLoaded', () => { setTimeout(() => syncClientsFromSheets(false), 400); });
+setInterval(() => { if (document.visibilityState !== 'hidden') syncClientsFromSheets(false); }, 5 * 60 * 1000);
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') syncClientsFromSheets(false);
+});
 
 // ══════════════════════════════════════════
 //  DRAWER SYSTEM
@@ -4495,7 +4550,7 @@ function refreshDashboard() {
   const now = new Date();
   document.getElementById('last-update').textContent = `Last refresh: ${now.toLocaleTimeString('en-AU',{hour:'2-digit',minute:'2-digit',second:'2-digit'})}`;
   if (selectedEmpId && employees[selectedEmpId]) showEmpDetail(selectedEmpId);
-  renderHome();
+  try { renderHome(); } catch (e) { console.warn('home render', e); }
 }
 
 setInterval(refreshDashboard, 30000);
