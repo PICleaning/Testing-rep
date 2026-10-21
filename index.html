@@ -5,10 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <!-- Device access gate (v2.0.8) — must stay first in <head> -->
 <style id="piGateStyle">
-  html.pi-gate, html.pi-gate body { background:#0b1424 !important; overflow:hidden !important; height:100%; }
+  html.pi-gate, html.pi-gate body { background:#0A1A3D !important; overflow:hidden !important; height:100%; }
   html.pi-gate body > *:not(#piGate) { display:none !important; }
   #piGate { position:fixed; inset:0; z-index:2147483647; display:flex; align-items:center; justify-content:center; padding:24px 16px;
-    background:radial-gradient(ellipse at 50% 35%, #15243f 0%, #0b1424 70%); font-family:'Montserrat',system-ui,-apple-system,sans-serif; color:#fff; }
+    background:#0A1A3D; font-family:'Montserrat',system-ui,-apple-system,sans-serif; color:#fff; }
   #piGate .pg-card { width:100%; max-width:360px; text-align:center; }
   #piGate .pg-emblem { width:76px; height:76px; margin:0 auto 18px; border-radius:50%; border:1.5px solid #c9a84c; display:flex; align-items:center; justify-content:center;
     font-family:'Cormorant Garamond',Georgia,serif; font-size:32px; font-weight:700; color:#e2c97e; box-shadow:0 0 40px rgba(201,168,76,0.18); }
@@ -22,7 +22,7 @@
   #piGate .pg-input { position:absolute; inset:0; width:100%; height:100%; opacity:0; font-size:16px; border:0; background:transparent; color:transparent; caret-color:transparent; }
   #piGate .pg-msg { min-height:20px; font-size:12px; line-height:1.6; color:rgba(255,255,255,0.55); }
   #piGate .pg-msg.err { color:#ff8a89; }
-  #piGate .pg-btn { width:100%; margin-top:16px; padding:13px; border:0; border-radius:10px; background:#c9a84c; color:#0b1424; font-family:inherit;
+  #piGate .pg-btn { width:100%; margin-top:16px; padding:13px; border:0; border-radius:10px; background:#c9a84c; color:#0A1A3D; font-family:inherit;
     font-size:13px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; }
   #piGate .pg-btn:disabled { opacity:0.4; cursor:default; }
   #piGate.locked .pg-boxes, #piGate.locked .pg-btn { display:none; }
@@ -1358,7 +1358,7 @@
      borders, status colour only where it means something.
   ══════════════════════════════════════════════════════════ */
   :root {
-    --navy:#0B1424; --navy-mid:#111D33; --navy-light:#1A2742;
+    --navy:#0A1A3D; --navy-mid:#10244E; --navy-light:#183265;
     --gold:#C9A84C; --gold-light:#E3C77A; --gold-pale:rgba(201,168,76,0.12);
     --white:#F2EEE4; --white-muted:#9AA3B5;
     --line:rgba(255,255,255,0.07); --line-strong:rgba(255,255,255,0.12);
@@ -1367,7 +1367,7 @@
     --serif:'Cormorant Garamond',Georgia,serif;
   }
   body { font-family:'Inter',system-ui,-apple-system,sans-serif; background:var(--navy); color:var(--white); -webkit-font-smoothing:antialiased; }
-  .topbar { background:rgba(11,20,36,0.92); border-bottom:1px solid var(--line); }
+  .topbar { background:rgba(10,26,61,0.92); border-bottom:1px solid var(--line); }
   .logo-text-main, .drawer-title, .section-heading, .settings-section-title, .nf-title { color:var(--gold-light); }
   .drawer { background:var(--navy-mid); border-left:1px solid var(--line-strong); }
   .drawer-header, .drawer-version-bar { background:var(--navy-mid); border-color:var(--line); }
@@ -1487,6 +1487,15 @@
   .ag-goal { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:10px 0 6px; font-size:13px; }
   .ag-goal input { width:72px; height:40px; border-radius:10px; border:1px solid var(--line-strong); background:var(--navy); color:var(--white); text-align:center; font:600 15px var(--mono); }
   .ag-goal input:focus { border-color:var(--gold); outline:none; }
+  .lp-await { margin-top:6px; font-size:12px; color:var(--st-30); }
+  .lp-await .m { font-family:var(--mono); }
+  .lp-inv.await .amt { color:var(--white-muted); }
+  .lp-col-legend { display:flex; gap:16px; margin-top:10px; font-size:12px; color:#C9CFDA; flex-wrap:wrap; }
+  .lp-col-legend span { display:flex; align-items:center; gap:6px; }
+  .lp-col-legend i { width:6px; height:6px; border-radius:50%; display:inline-block; }
+  .lp-col-legend b { font-family:var(--mono); font-weight:500; color:var(--white); }
+  .as-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,0.02); }
+  .as-row .reminder-sms-btn { flex:0 0 auto; padding:0 18px; }
   .lp-svc { padding:12px 0; border-top:1px solid var(--line); }
   .lp-svc .r { display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:500; }
   .lp-svc .f { font-size:11px; font-weight:600; white-space:nowrap; }
@@ -1530,7 +1539,9 @@
   #splash .sp-sub { margin-top:4px; font-size:12px; color:var(--white-muted); opacity:0; animation:spIn .6s ease .45s forwards; }
   #splash .sp-line { width:64px; height:1px; margin-top:28px; background:var(--line-strong); overflow:hidden; opacity:0; animation:spIn .4s ease .6s forwards; }
   #splash .sp-line span { display:block; height:1px; width:0; background:var(--gold); animation:spLoad 1.1s ease .7s forwards; }
-  #splash .splash-version { font-family:var(--mono); font-size:11px; font-weight:500; letter-spacing:0.04em; color:var(--white-muted); bottom:32px; }
+  #splash .splash-version { position:absolute; left:0; right:0; bottom:32px; transform:none; text-align:center; letter-spacing:0; white-space:nowrap;
+    font-family:var(--mono); font-size:11px; font-weight:500; color:var(--white-muted); opacity:0; animation:spFade .5s ease .8s forwards; }
+  @keyframes spFade { to { opacity:1; } }
   @keyframes spIn { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:none; } }
   @keyframes spLoad { to { width:100%; } }
 
@@ -1674,7 +1685,7 @@
   .sidebar-title { font-family:var(--serif); font-size:20px; color:var(--gold-light); }
   .live-badge { background:transparent; border-color:rgba(95,208,142,0.35); text-transform:none; letter-spacing:0; font-size:11px; }
   .live-dot { animation:none; }
-  .map-info-bar, .last-update, .map-home-btn, .emp-detail-popup { background:rgba(11,20,36,0.94); border-color:var(--line-strong); }
+  .map-info-bar, .last-update, .map-home-btn, .emp-detail-popup { background:rgba(10,26,61,0.94); border-color:var(--line-strong); }
   .map-home-btn { text-transform:none; letter-spacing:0; font-size:13px; font-weight:500; color:var(--white); }
   .emp-marker-pin { background:var(--gold); font-family:'Inter',sans-serif; font-size:12px; }
 
@@ -1705,7 +1716,7 @@
   <div class="sp-title">Pi Admin</div>
   <div class="sp-sub">Pi Cleaning Services</div>
   <div class="sp-line"><span></span></div>
-  <div class="splash-version">v3.1.1</div>
+  <div class="splash-version">v3.1.2</div>
 </div>
 
 <!-- Overlay for drawer -->
@@ -1786,7 +1797,7 @@
         <span class="nav-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg></span>
         <div class="nav-item-text">
           <div class="nav-item-label">New Features</div>
-          <div class="nav-item-sub">What's new in v3.1.1</div>
+          <div class="nav-item-sub">What's new in v3.1.2</div>
         </div>
         <span class="new-feature-badge">NEW</span>
       </button>
@@ -1823,7 +1834,7 @@
         <span class="nav-item-arrow">›</span>
       </button>
     </div>
-    <div class="drawer-version-bar-inline">Pi Admin · V 3.1.1 · Pi Cleaning Services</div>
+    <div class="drawer-version-bar-inline">Pi Admin · V 3.1.2 · Pi Cleaning Services</div>
   </div>
   <!-- ── PANEL: PAY CALCULATOR ── -->
   <div class="drawer-panel" id="panel-paycalc">
@@ -2353,6 +2364,10 @@
         <label class="jd-field-label">Notes</label>
         <input class="field-input" id="jdNotes" type="text" placeholder="Optional notes" />
       </div>
+      <div class="jd-field-group">
+        <label class="jd-field-label" for="jdInvoiceAmount">Invoice amount ($) <span class="jd-field-optional">(adds an invoice — overdue if unpaid after 7 days)</span></label>
+        <input class="field-input" id="jdInvoiceAmount" type="text" inputmode="decimal" placeholder="e.g. 420.00" autocomplete="off" style="font-family:var(--mono);" />
+      </div>
 
       <div class="jd-existing-notice" id="jdExistingNotice" style="display:none;">
         This client already has service data on file — saving will update it.
@@ -2487,17 +2502,16 @@
         <span class="bc-chev">›</span>
       </summary>
       <div class="bc-folder-body">
-        <div class="settings-section-desc" style="margin:4px 0 0;">The Google Apps Script this version needs is built into the app. Copy it, then in your <strong style="color:var(--gold-light)">Clients</strong> spreadsheet:</div>
-        <ol style="margin:0;padding-left:18px;font-size:12px;line-height:1.9;color:var(--white-muted);">
-          <li>Extensions → Apps Script → select all in Code.gs → paste</li>
-          <li>Pick <strong style="color:var(--white)">setupSheet</strong> → Run → approve access</li>
-          <li>Deploy → Manage deployments → Edit → <strong style="color:var(--white)">New version</strong> → Deploy</li>
-        </ol>
-        <div class="settings-section-desc" style="margin:0;">Overdue invoices are saved to your separate Invoices spreadsheet automatically.</div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;">
-          <button class="reminder-sms-btn" style="flex:1;" onclick="copyAppsScript()">Copy Apps Script code</button>
-          <button class="gs-load-btn" style="flex:1;margin-top:0;" onclick="checkAppsScript()">Check connection</button>
+        <div class="settings-section-desc" style="margin:4px 0 0;">Two separate scripts, one per Google Sheet — they never touch each other's data. For each one: open that spreadsheet → Extensions → Apps Script → replace Code.gs → run <strong style="color:var(--white)">setupSheet</strong> → Deploy → Manage deployments → Edit → <strong style="color:var(--white)">New version</strong> → Deploy.</div>
+        <div class="as-row">
+          <div><div class="settings-toggle-label">Jobs Done script</div><div class="settings-toggle-sub">Clients, Jobs Done, reminders, menu lock, outreach</div></div>
+          <button class="reminder-sms-btn" onclick="copyAppsScript('piAppsScriptCode','Jobs Done')">Copy</button>
         </div>
+        <div class="as-row">
+          <div><div class="settings-toggle-label">Invoices script</div><div class="settings-toggle-sub">Overdue invoices &amp; collection — separate sheet</div></div>
+          <button class="reminder-sms-btn" onclick="copyAppsScript('piInvoicesScriptCode','Invoices')">Copy</button>
+        </div>
+        <button class="gs-load-btn" style="margin-top:0;" onclick="checkAppsScript()">Check both connections</button>
         <div class="settings-saved-msg" id="appsScriptMsg"></div>
       </div>
     </details>
@@ -2796,7 +2810,14 @@
   <!-- ── PANEL: NEW FEATURES ── -->
   <div class="drawer-panel" id="panel-newfeatures">
     <div class="section-tag">Latest Update</div>
-    <div class="section-heading">What's New in v3.1.1</div>
+    <div class="section-heading">What's New in v3.1.2</div>
+    <div class="new-feature-card" style="border-color:rgba(201,168,76,0.45);background:rgba(201,168,76,0.07);">
+      <div class="nf-icon"></div>
+      <div class="nf-content">
+        <div class="nf-title" style="color:var(--gold);">Invoices from Jobs Done &amp; Collection — v3.1.2</div>
+        <div class="nf-desc">Log Job Done now takes an invoice amount and adds the invoice for you. Unpaid invoices turn overdue 7 days after their date; until then they show as awaiting payment. A new Collection card shows the value of jobs done in the last 30 days. Invoices run on their own Google Sheet and script, separate from Jobs Done. New royal navy background.</div>
+      </div>
+    </div>
     <div class="new-feature-card" style="border-color:rgba(201,168,76,0.45);background:rgba(201,168,76,0.07);">
       <div class="nf-icon"></div>
       <div class="nf-content">
@@ -3306,20 +3327,19 @@
 
 <script type="text/plain" id="piAppsScriptCode">
 // ════════════════════════════════════════════════════════════════════
-//  Pi Cleaning Services — Google Apps Script  ·  v3.1.1
+//  Pi Cleaning Services — JOBS DONE Apps Script  ·  v3.1.2
 //  Paste this whole file into Extensions → Apps Script (Code.gs) of your
-//  CLIENTS spreadsheet, run setupSheet once, then Deploy → Manage
-//  deployments → Edit → New version → Deploy (keeps the same URL).
+//  JOBS DONE / CLIENTS spreadsheet, run setupSheet once, then Deploy →
+//  Manage deployments → Edit → New version → Deploy (keeps the same URL).
+//  Clients, Jobs Done, reminders, menu lock and outreach only — overdue
+//  invoices are handled by the separate Invoices script and sheet.
 //  FIX: All dates explicitly serialised as DD/MM/YYYY strings
 //       so the app never has to guess the format
 //  ADDED: Clients sheet is kept sorted A→Z by name after every
 //         add/update, so the "Jobs Done" screen in the app and the
 //         raw sheet always match.
-//  v3.1.1 (Oct 2026): overdue invoices live in their own spreadsheet
-//         (INVOICE_SPREADSHEET_ID below). Its first empty tab is turned
-//         into the "Invoices" tab automatically.
-//  v3.0.0 (Oct 2026): "Invoices" tab (overdue invoice tracking) and
-//         "Outreach" tab (prospecting log for the Pi Agent) — both are
+//  v3.1.2 (Oct 2026): invoice code moved to its own script.
+//  v3.0.0 (Oct 2026): "Outreach" tab (prospecting log for the Pi Agent) — both are
 //         created automatically the first time they're used.
 //  v2.1.1 FIX (Oct 2026): saves now arrive via GET (POST is kept as a
 //         fallback), writes are locked so two saves can't collide,
@@ -3327,7 +3347,7 @@
 //         and getMenuLock / setMenuLock actions are included.
 // ════════════════════════════════════════════════════════════════════
 
-const SCRIPT_VERSION = '3.1.1';
+const SCRIPT_VERSION = '3.1.2';
 const SHEET_NAME = 'Clients';
 const TZ = Session.getScriptTimeZone(); // e.g. "Australia/Melbourne"
 
@@ -3365,13 +3385,9 @@ function doGet(e) {
     else if (action === 'deleteClient') result = deleteClient(e.parameter.rowIndex);
     else if (action === 'getMenuLock')  result = getMenuLock();
     else if (action === 'setMenuLock')  result = setMenuLock(e.parameter.state);
-    else if (action === 'getInvoices')     result = getInvoices();
-    else if (action === 'addInvoice')      result = addInvoice(e.parameter);
-    else if (action === 'markInvoicePaid') result = markInvoicePaid(e.parameter.id);
-    else if (action === 'deleteInvoice')   result = deleteInvoice(e.parameter.id);
     else if (action === 'getOutreach')     result = getOutreach();
     else if (action === 'logOutreach')     result = logOutreach(e.parameter);
-    else if (action === 'ping')         result = { status: 'ok', version: SCRIPT_VERSION, invoiceSheet: INVOICE_SPREADSHEET_ID, timestamp: new Date().toISOString() };
+    else if (action === 'ping')         result = { status: 'ok', version: SCRIPT_VERSION, script: 'jobs', timestamp: new Date().toISOString() };
     else                                result = { error: 'Unknown action: ' + action };
   } catch (err) {
     result = { error: err.message, stack: err.stack };
@@ -3398,10 +3414,6 @@ function doPost(e) {
     else if (action === 'deleteClient') result = deleteClient(params.rowIndex);
     else if (action === 'getMenuLock')  result = getMenuLock();
     else if (action === 'setMenuLock')  result = setMenuLock(params.state);
-    else if (action === 'getInvoices')     result = getInvoices();
-    else if (action === 'addInvoice')      result = addInvoice(params);
-    else if (action === 'markInvoicePaid') result = markInvoicePaid(params.id);
-    else if (action === 'deleteInvoice')   result = deleteInvoice(params.id);
     else if (action === 'getOutreach')     result = getOutreach();
     else if (action === 'logOutreach')     result = logOutreach(params);
     else                                result = { error: 'Unknown action: ' + action };
@@ -3531,98 +3543,6 @@ function deleteClient(rowIndex) {
   sheet.deleteRow(row);
   applyAllColours();
   return { success: true, message: 'Client deleted' };
-  });
-}
-
-// ═══════════════════════════════════════════════════════════════
-//  INVOICES  (v3.0.0) — tab "Invoices"
-//  ID | Client | Amount | Issue Date | No. of Invoices | Comments | Status | Paid Date | Created
-// ═══════════════════════════════════════════════════════════════
-// The separate Google Sheet that holds overdue invoices
-const INVOICE_SPREADSHEET_ID = '19uspobmSoLTHKVvaBkAXf05b0tVqBbikuzYskE2wvw0';
-const INV_SHEET = 'Invoices';
-const INV_HEAD  = ['ID','Client','Amount','Issue Date','No. of Invoices','Comments','Status','Paid Date','Created'];
-
-function getInvSheet() {
-  const ss = SpreadsheetApp.openById(INVOICE_SPREADSHEET_ID);
-  let sheet = ss.getSheetByName(INV_SHEET);
-  if (!sheet) {
-    // Brand-new spreadsheet: reuse its empty first tab rather than leaving a blank "Sheet1"
-    const first = ss.getSheets()[0];
-    if (first && first.getLastRow() === 0 && first.getLastColumn() === 0) {
-      sheet = first.setName(INV_SHEET);
-      styleNewTab(sheet, INV_HEAD, [110,220,110,120,120,280,90,110,150]);
-    } else {
-      sheet = getOrCreateTab(INV_SHEET, INV_HEAD, [110,220,110,120,120,280,90,110,150], ss);
-    }
-  }
-  return sheet;
-}
-
-function getInvoices() {
-  const sheet = getInvSheet();
-  const data  = sheet.getDataRange().getValues();
-  const out = [];
-  for (let i = 1; i < data.length; i++) {
-    const r = data[i];
-    if (!r[0] && !r[1]) continue;
-    out.push({
-      id:        String(r[0] || ''),
-      client:    String(r[1] || '').trim(),
-      amount:    Number(r[2]) || 0,
-      issueDate: toAuDateStr(r[3]),
-      count:     parseInt(r[4], 10) || 1,
-      comments:  String(r[5] || '').trim(),
-      status:    String(r[6] || 'Unpaid').trim(),
-      paidDate:  toAuDateStr(r[7])
-    });
-  }
-  return { invoices: out, timestamp: new Date().toISOString() };
-}
-
-function addInvoice(p) {
-  return withLock(function () {
-    const client = String(p.client || '').trim();
-    const amount = parseFloat(String(p.amount || '').replace(/[^0-9.]/g, ''));
-    if (!client)        return { error: 'Client name is required' };
-    if (!(amount > 0))  return { error: 'Invoice amount is required' };
-    const issue = parseAuDateStr(p.issueDate) || new Date();
-    const count = Math.max(1, parseInt(p.count, 10) || 1);
-    const id = 'INV-' + Utilities.getUuid().slice(0, 8).toUpperCase();
-    const sheet = getInvSheet();
-    sheet.appendRow([id, client, amount, issue, count, String(p.comments || '').trim(), 'Unpaid', '', new Date()]);
-    const row = sheet.getLastRow();
-    sheet.getRange(row, 3).setNumberFormat('$#,##0.00');
-    sheet.getRange(row, 4).setNumberFormat('dd/mm/yyyy');
-    sheet.getRange(row, 9).setNumberFormat('dd/mm/yyyy hh:mm');
-    return { success: true, id: id };
-  });
-}
-
-function findInvRow(id) {
-  const sheet = getInvSheet();
-  const ids = sheet.getRange(1, 1, Math.max(1, sheet.getLastRow()), 1).getValues();
-  for (let i = 1; i < ids.length; i++) if (String(ids[i][0]) === String(id)) return i + 1;
-  return null;
-}
-
-function markInvoicePaid(id) {
-  return withLock(function () {
-    const row = findInvRow(id);
-    if (!row) return { error: 'Invoice not found — tap Refresh and try again.' };
-    const sheet = getInvSheet();
-    sheet.getRange(row, 7).setValue('Paid');
-    sheet.getRange(row, 8).setValue(new Date()).setNumberFormat('dd/mm/yyyy');
-    return { success: true };
-  });
-}
-
-function deleteInvoice(id) {
-  return withLock(function () {
-    const row = findInvRow(id);
-    if (!row) return { error: 'Invoice not found' };
-    getInvSheet().deleteRow(row);
-    return { success: true };
   });
 }
 
@@ -3898,7 +3818,7 @@ function getSheet() {
 
 // ─── TRIGGERS ────────────────────────────────────────────────────────
 // Run setupSheet once from the editor after pasting — it re-authorises the script.
-function setupSheet()        { getSheet(); applyAllColours(); getMenuLock(); getInvSheet(); getOutSheet(); }
+function setupSheet()        { getSheet(); applyAllColours(); getMenuLock(); getOutSheet(); }
 function dailyColourUpdate() { applyAllColours(); }
 
 // ─── DEBUG — paste into editor and run to see what dates look like ───
@@ -3916,6 +3836,178 @@ function debugDates() {
     Logger.log('  ServiceDone  raw=' + sd  + ' type=' + typeof sd  + ' isDate=' + (sd  instanceof Date) + ' → ' + toAuDateStr(sd));
   }
 }
+</script>
+<script type="text/plain" id="piInvoicesScriptCode">
+// ════════════════════════════════════════════════════════════════════
+//  Pi Cleaning Services — INVOICES Apps Script  ·  v3.1.2
+//  Paste this whole file into Extensions → Apps Script (Code.gs) of your
+//  INVOICES spreadsheet, run setupSheet once, then Deploy → Manage
+//  deployments → Edit → New version → Deploy (keeps the same URL).
+//
+//  Only ever reads/writes the "Invoices" tab of THIS spreadsheet — it
+//  cannot touch your Jobs Done / Clients sheet.
+//
+//  Columns: ID | Client | Amount | Issue Date | No. of Invoices |
+//           Comments | Status | Paid Date | Created | Source
+//  Source = "Job" (logged from Jobs Done) or "Manual" (Add invoice).
+//  The app treats an unpaid invoice as overdue 7 days after its date.
+// ════════════════════════════════════════════════════════════════════
+
+const SCRIPT_VERSION = '3.1.2';
+const INVOICE_SPREADSHEET_ID = '19uspobmSoLTHKVvaBkAXf05b0tVqBbikuzYskE2wvw0'; // used only if this script isn't bound to the sheet
+const TZ = Session.getScriptTimeZone();
+const INV_SHEET = 'Invoices';
+const INV_HEAD  = ['ID','Client','Amount','Issue Date','No. of Invoices','Comments','Status','Paid Date','Created','Source'];
+const INV_WIDTHS = [110,220,110,120,120,280,90,110,150,90];
+
+// ─── ENTRY POINTS ───────────────────────────────────────────────────
+function doGet(e)  { return handle_((e && e.parameter) || {}); }
+function doPost(e) {
+  let p = {};
+  try { p = (e && e.postData && e.postData.contents) ? JSON.parse(e.postData.contents) : ((e && e.parameter) || {}); }
+  catch (err) { p = (e && e.parameter) || {}; }
+  return handle_(p);
+}
+function handle_(p) {
+  let result;
+  try {
+    switch (p.action) {
+      case 'getInvoices':     result = getInvoices(); break;
+      case 'addInvoice':      result = addInvoice(p); break;
+      case 'markInvoicePaid': result = markInvoicePaid(p.id); break;
+      case 'deleteInvoice':   result = deleteInvoice(p.id); break;
+      case 'ping':            result = { status: 'ok', version: SCRIPT_VERSION, script: 'invoices', timestamp: new Date().toISOString() }; break;
+      default:                result = { error: 'Unknown action: ' + p.action };
+    }
+  } catch (err) { result = { error: err.message }; }
+  return ContentService.createTextOutput(JSON.stringify(result)).setMimeType(ContentService.MimeType.JSON);
+}
+
+// ─── SHEET ──────────────────────────────────────────────────────────
+function getBook_() {
+  return SpreadsheetApp.getActiveSpreadsheet() || SpreadsheetApp.openById(INVOICE_SPREADSHEET_ID);
+}
+function getInvSheet() {
+  const ss = getBook_();
+  let sheet = ss.getSheetByName(INV_SHEET);
+  if (!sheet) {
+    const first = ss.getSheets()[0];
+    if (first && first.getLastRow() === 0 && first.getLastColumn() === 0) sheet = first.setName(INV_SHEET);
+    else sheet = ss.insertSheet(INV_SHEET);
+    sheet.getRange(1, 1, 1, INV_HEAD.length).setValues([INV_HEAD])
+      .setBackground('#0A1A3D').setFontColor('#C9A84C').setFontWeight('bold');
+    sheet.setFrozenRows(1);
+    INV_WIDTHS.forEach((w, i) => sheet.setColumnWidth(i + 1, w));
+  } else if (String(sheet.getRange(1, 10).getValue() || '') !== 'Source') {
+    // Tab made by v3.1.1 — add the Source column header
+    sheet.getRange(1, 10).setValue('Source').setBackground('#0A1A3D').setFontColor('#C9A84C').setFontWeight('bold');
+  }
+  return sheet;
+}
+
+// ─── READ ───────────────────────────────────────────────────────────
+function getInvoices() {
+  const data = getInvSheet().getDataRange().getValues();
+  const out = [];
+  for (let i = 1; i < data.length; i++) {
+    const r = data[i];
+    if (!r[0] && !r[1]) continue;
+    out.push({
+      id:        String(r[0] || ''),
+      client:    String(r[1] || '').trim(),
+      amount:    Number(r[2]) || 0,
+      issueDate: toAuDateStr(r[3]),
+      count:     parseInt(r[4], 10) || 1,
+      comments:  String(r[5] || '').trim(),
+      status:    String(r[6] || 'Unpaid').trim(),
+      paidDate:  toAuDateStr(r[7]),
+      source:    String(r[9] || 'Manual').trim() || 'Manual'
+    });
+  }
+  return { invoices: out, version: SCRIPT_VERSION, timestamp: new Date().toISOString() };
+}
+
+// ─── WRITE ──────────────────────────────────────────────────────────
+function addInvoice(p) {
+  return withLock(function () {
+    const client = String(p.client || '').trim();
+    const amount = parseFloat(String(p.amount || '').replace(/[^0-9.]/g, ''));
+    if (!client)       return { error: 'Client name is required' };
+    if (!(amount > 0)) return { error: 'Invoice amount is required' };
+    const issue  = parseAuDateStr(p.issueDate) || new Date();
+    const count  = Math.max(1, parseInt(p.count, 10) || 1);
+    const source = String(p.source || '').toLowerCase() === 'job' ? 'Job' : 'Manual';
+    const id = 'INV-' + Utilities.getUuid().slice(0, 8).toUpperCase();
+    const sheet = getInvSheet();
+    sheet.appendRow([id, client, amount, issue, count, String(p.comments || '').trim(), 'Unpaid', '', new Date(), source]);
+    const row = sheet.getLastRow();
+    sheet.getRange(row, 3).setNumberFormat('$#,##0.00');
+    sheet.getRange(row, 4).setNumberFormat('dd/mm/yyyy');
+    sheet.getRange(row, 9).setNumberFormat('dd/mm/yyyy hh:mm');
+    return { success: true, id: id };
+  });
+}
+
+function findInvRow_(id) {
+  const sheet = getInvSheet();
+  const ids = sheet.getRange(1, 1, Math.max(1, sheet.getLastRow()), 1).getValues();
+  for (let i = 1; i < ids.length; i++) if (String(ids[i][0]) === String(id)) return i + 1;
+  return null;
+}
+
+function markInvoicePaid(id) {
+  return withLock(function () {
+    const row = findInvRow_(id);
+    if (!row) return { error: 'Invoice not found — tap Refresh and try again.' };
+    const sheet = getInvSheet();
+    sheet.getRange(row, 7).setValue('Paid');
+    sheet.getRange(row, 8).setValue(new Date()).setNumberFormat('dd/mm/yyyy');
+    return { success: true };
+  });
+}
+
+function deleteInvoice(id) {
+  return withLock(function () {
+    const row = findInvRow_(id);
+    if (!row) return { error: 'Invoice not found' };
+    getInvSheet().deleteRow(row);
+    return { success: true };
+  });
+}
+
+// ─── HELPERS ────────────────────────────────────────────────────────
+function withLock(fn) {
+  const lock = LockService.getScriptLock();
+  if (!lock.tryLock(20000)) return { error: 'Sheet is busy — please try again in a few seconds.' };
+  try { const out = fn(); SpreadsheetApp.flush(); return out; }
+  finally { lock.releaseLock(); }
+}
+
+function toAuDateStr(val) {
+  if (!val && val !== 0) return '';
+  if (val instanceof Date) return isNaN(val.getTime()) ? '' : Utilities.formatDate(val, TZ, 'dd/MM/yyyy');
+  const str = String(val).trim();
+  let m = str.match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (m) {
+    let y = parseInt(m[3], 10); if (y < 100) y += 2000;
+    return String(parseInt(m[1], 10)).padStart(2, '0') + '/' + String(parseInt(m[2], 10)).padStart(2, '0') + '/' + y;
+  }
+  m = str.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m) return m[3] + '/' + m[2] + '/' + m[1];
+  return '';
+}
+
+function parseAuDateStr(str) {
+  if (!str) return null;
+  const m = String(str).trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{2,4})$/);
+  if (!m) return null;
+  let y = parseInt(m[3], 10); if (y < 100) y += 2000;
+  const d = new Date(y, parseInt(m[2], 10) - 1, parseInt(m[1], 10));
+  return isNaN(d.getTime()) ? null : d;
+}
+
+// Run once from the editor after pasting — creates the tab and approves access.
+function setupSheet() { getInvSheet(); }
 </script>
 
 <!-- ════════ HOME / LANDING PAGE (v3.0.0) ════════ -->
@@ -3953,7 +4045,7 @@ function debugDates() {
               </div>
             </div>
             <div>
-              <div style="font-size:11px;letter-spacing:0.1em;color:var(--white-muted);">BY AGE · DUE 7 DAYS AFTER ISSUE</div>
+              <div style="font-size:11px;letter-spacing:0.1em;color:var(--white-muted);">DAYS OVERDUE · DUE 7 DAYS AFTER INVOICE DATE</div>
               <div id="lpAging" style="display:flex;flex-direction:column;gap:10px;margin-top:6px;"></div>
               <div style="font-size:11px;color:var(--white-muted);margin-top:4px;" id="lpInvLargest"></div>
             </div>
@@ -3990,6 +4082,18 @@ function debugDates() {
       <!-- ═════ RIGHT PANEL ═════ -->
       <aside class="lp-side">
 
+        <!-- Collection: value of jobs done, last 30 days -->
+        <section class="lp-card" aria-label="Collection, last 30 days">
+          <div style="display:flex;justify-content:space-between;align-items:baseline;">
+            <span class="lp-label"><span class="sw" style="background:var(--gold)"></span>Collection</span>
+            <span style="font-size:12px;color:var(--white-muted);">last 30 days</span>
+          </div>
+          <div class="lp-big" id="lpColTotal" style="margin-top:6px;">$0</div>
+          <div class="lp-sub" id="lpColSub" style="margin-top:2px;"></div>
+          <div class="lp-bar" id="lpColBar" style="margin-top:14px;"></div>
+          <div class="lp-col-legend" id="lpColLegend"></div>
+        </section>
+
         <!-- Total clients -->
         <section class="lp-card" aria-label="Total clients">
           <div style="display:flex;justify-content:space-between;align-items:baseline;">
@@ -4022,7 +4126,7 @@ function debugDates() {
       </aside>
     </div>
   </div>
-  <footer class="footer">© 2026 <span>Pi Cleaning Services</span> · Pi Admin v3.1.1</footer>
+  <footer class="footer">© 2026 <span>Pi Cleaning Services</span> · Pi Admin v3.1.2</footer>
 
   <!-- Add invoice modal -->
   <div class="lp-modal" id="lpInvModal" onclick="if(event.target===this) closeInvoiceModal()">
@@ -4098,7 +4202,8 @@ const GOOGLE_URL = "https://www.google.com/search?sca_esv=89d8bdbef1fc9dde&rlz=1
 const REVIEW_LINK_TEXT = "Click here to review us ⭐";
 const FROM_EMAIL = "Admin@picleaningservices.com.au";
 const GS_URL_KEY = 'pi_gs_webapp_url';
-const GS_HARDCODED_URL = 'https://script.google.com/macros/s/AKfycbyHN01kkbbxKJFyPzTlKPlG2iNO5bp9m9NvZ000n2_-cHttqmKG_rYDJsK824A3skEE/exec';
+const GS_HARDCODED_URL = 'https://script.google.com/macros/s/AKfycbyHN01kkbbxKJFyPzTlKPlG2iNO5bp9m9NvZ000n2_-cHttqmKG_rYDJsK824A3skEE/exec'; // Jobs Done / Clients sheet
+const INVOICES_URL = 'https://script.google.com/macros/s/AKfycbyKo6YcMj083xNC6YgCu48MO7b0W_8ZCc-DPqgjPjASwTffqxqDqyQep0-3IBpA1qnW/exec'; // Invoices sheet (separate)
 const CLIENTS_CACHE_KEY = 'pi_clients_cache';
 
 // ══════════════════════════════════════════
@@ -4951,6 +5056,7 @@ function openJobDoneModal(rowIndex) {
   document.getElementById('jdServiceDone').value = client ? auToYmd(client.serviceDone) : '';
   document.getElementById('jdNextService').value = client ? auToYmd(client.nextService) : '';
   document.getElementById('jdNotes').value = client ? (client.notes||'') : '';
+  document.getElementById('jdInvoiceAmount').value = '';
   document.querySelectorAll('.jd-interval-chip').forEach(b => b.classList.remove('active'));
 
   // "Already added from the Sheet but not from the app" notice — shown whenever
@@ -4977,6 +5083,9 @@ async function saveJobDone() {
   const serviceDone = ymdToAU(document.getElementById('jdServiceDone').value);
   const nextService = ymdToAU(document.getElementById('jdNextService').value);
   const notes       = document.getElementById('jdNotes').value.trim();
+  const invRaw      = (document.getElementById('jdInvoiceAmount').value || '').trim();
+  const invAmount   = parseFloat(invRaw.replace(/[^0-9.]/g, ''));
+  if (invRaw && !(invAmount > 0)) { showJobsDoneToast('Invoice amount should be a number, e.g. 420.00', 'warn'); return; }
 
   const isUpdate = jobsDoneEditRowIndex !== null;
   const existingClient = isUpdate ? allClients.find(c => c.rowIndex === jobsDoneEditRowIndex) : null;
@@ -5030,7 +5139,20 @@ async function saveJobDone() {
       showJobsDoneToast('' + data.error, 'error');
     } else {
       closeJobDoneModal();
-      showJobsDoneToast(`✅ ${isUpdate ? 'Service updated for' : 'Added'} ${name}.`, 'success');
+      let invMsg = '';
+      if (invAmount > 0) {
+        try {
+          const today = new Date();
+          const invDate = serviceDone || ymdToAU(dateToYmd(today));
+          await piApi({ action: 'addInvoice', client: name, amount: invAmount.toFixed(2), issueDate: invDate, count: 1,
+                        comments: notes ? 'Job · ' + notes : 'Job logged in app', source: 'Job' });
+          invMsg = ` Invoice ${piMoney(invAmount)} added.`;
+          lpLoadInvoices().then(renderLanding).catch(() => {});
+        } catch (e) {
+          invMsg = ` Job saved, but the invoice didn’t save: ${e.message}`;
+        }
+      }
+      showJobsDoneToast(`${isUpdate ? 'Service updated for' : 'Added'} ${name}.${invMsg}`, invMsg.indexOf('didn’t') >= 0 ? 'warn' : 'success');
       await refreshJobsDone();
     }
   } catch(e) {
@@ -7177,7 +7299,7 @@ function exportPayPDF() {
   </tbody>
 </table>
 ${gstSummary}
-<div class="footer">PI Cleaning Services Pty Ltd &nbsp;·&nbsp; Pi Admin v3.1.1 &nbsp;·&nbsp; Pay Calculator Export</div>
+<div class="footer">PI Cleaning Services Pty Ltd &nbsp;·&nbsp; Pi Admin v3.1.2 &nbsp;·&nbsp; Pay Calculator Export</div>
 </body></html>`;
 
   const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
@@ -7531,8 +7653,10 @@ function lpToast(msg) {
   t.textContent = msg; t.classList.add('show');
   clearTimeout(lpToast._t); lpToast._t = setTimeout(() => t.classList.remove('show'), 3200);
 }
-async function piApi(params) {
-  const url = getGsUrl();
+const INVOICE_ACTIONS = ['getInvoices', 'addInvoice', 'markInvoicePaid', 'deleteInvoice'];
+async function piApi(params, target) {
+  // Invoices live in their own sheet + script; everything else goes to Jobs Done
+  const url = (target === 'invoices' || INVOICE_ACTIONS.indexOf(params.action) >= 0) ? INVOICES_URL : getGsUrl();
   const qs = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k] == null ? '' : params[k])).join('&');
   const r = await fetch(url + '?' + qs + '&_ts=' + Date.now(), { redirect: 'follow' });
   const d = await r.json();
@@ -7584,7 +7708,7 @@ async function refreshLanding() {
   } else {
     const now = new Date();
     lpSetSync('Synced ' + now.toLocaleTimeString('en-AU', { hour: '2-digit', minute: '2-digit' }), false);
-    if (failed.length) lpToast('Some data didn’t load — copy the new Apps Script from Settings → Apps Script.');
+    if (failed.length) lpToast('Some data didn’t load — open Settings → Apps Script and tap Check both connections.');
   }
   updateDueBadge();
   renderLanding();
@@ -7642,7 +7766,10 @@ function renderLanding() {
   const part = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
   document.getElementById('lpDate').textContent = now.toLocaleDateString('en-AU', { weekday: 'long', day: 'numeric', month: 'long' });
   const need = rows.filter(r => r.days !== null && r.days <= 14).length;
-  const owed = unpaid.reduce((s, i) => s + (Number(i.amount) || 0), 0);
+  const overdue = unpaid.filter(i => i.age > PAY_TERMS_DAYS);
+  const awaiting = unpaid.filter(i => i.age <= PAY_TERMS_DAYS);
+  const owed = overdue.reduce((s, i) => s + (Number(i.amount) || 0), 0);
+  const awaitingAmt = awaiting.reduce((s, i) => s + (Number(i.amount) || 0), 0);
   let sentence = '';
   if (need || owed) {
     const bits = [];
@@ -7654,39 +7781,57 @@ function renderLanding() {
   }
   document.getElementById('lpHello').innerHTML = `${part}, Singh.${sentence}`;
 
-  // Overdue invoices widget
-  const invCount = unpaid.reduce((s, i) => s + (parseInt(i.count, 10) || 1), 0);
-  const clientsOwing = new Set(unpaid.map(i => i.client.toLowerCase())).size;
+  // Overdue invoices widget — unpaid 7+ days after the invoice date
+  const invCount = overdue.reduce((s, i) => s + (parseInt(i.count, 10) || 1), 0);
+  const clientsOwing = new Set(overdue.map(i => i.client.toLowerCase())).size;
   document.getElementById('lpInvTotal').textContent = piMoney(owed);
-  document.getElementById('lpInvSub').innerHTML = unpaid.length
-    ? `<span class="m">${invCount}</span> invoice${invCount === 1 ? '' : 's'} · <span class="m">${clientsOwing}</span> client${clientsOwing === 1 ? '' : 's'} · oldest <span class="m" style="color:var(--st-over)">${unpaid[0].age} days</span>`
-    : 'No overdue invoices';
-  const bucket = (lo, hi) => unpaid.filter(i => i.age >= lo && i.age <= hi).reduce((s, i) => s + (Number(i.amount) || 0), 0);
+  document.getElementById('lpInvSub').innerHTML = (overdue.length
+    ? `<span class="m">${invCount}</span> invoice${invCount === 1 ? '' : 's'} · <span class="m">${clientsOwing}</span> client${clientsOwing === 1 ? '' : 's'} · oldest <span class="m" style="color:var(--st-over)">${overdue[0].age - PAY_TERMS_DAYS} days overdue</span>`
+    : 'Nothing overdue') +
+    (awaiting.length ? `<div class="lp-await"><span class="m">${piMoney(awaitingAmt)}</span> awaiting payment · ${awaiting.length} invoice${awaiting.length === 1 ? '' : 's'} within 7 days</div>` : '');
+  const bucket = (lo, hi) => overdue.filter(i => (i.age - PAY_TERMS_DAYS) >= lo && (i.age - PAY_TERMS_DAYS) <= hi).reduce((s, i) => s + (Number(i.amount) || 0), 0);
   const aging = [
-    { label: 'Within terms', v: bucket(0, PAY_TERMS_DAYS), color: 'var(--st-30)' },
-    { label: '8–30 days', v: bucket(PAY_TERMS_DAYS + 1, 30), color: 'var(--st-soon)' },
+    { label: '1–14 days', v: bucket(1, 14), color: 'var(--st-soon)' },
+    { label: '15–30 days', v: bucket(15, 30), color: 'var(--st-over)' },
     { label: '30+ days', v: bucket(31, 1e6), color: 'var(--st-old)' }
   ];
   document.getElementById('lpAging').innerHTML = aging.map(a => `
     <div class="lp-age-row"><span>${a.label}</span>
       <div class="lp-bar"><div style="width:${owed ? Math.round(a.v / owed * 100) : 0}%;background:${a.color}"></div></div>
       <span class="v">${piMoney(a.v)}</span></div>`).join('');
-  const largest = unpaid.slice().sort((a, b) => b.amount - a.amount)[0];
+  const largest = overdue.slice().sort((a, b) => b.amount - a.amount)[0];
   document.getElementById('lpInvLargest').textContent = largest ? `Largest: ${largest.client} · ${piMoney(largest.amount)}` : '';
-  document.getElementById('lpInvList').innerHTML = unpaid.length ? unpaid.map(i => {
-    const col = i.age > 30 ? 'var(--st-old)' : i.age > PAY_TERMS_DAYS ? 'var(--st-soon)' : 'var(--st-30)';
+  const listed = overdue.concat(awaiting);
+  document.getElementById('lpInvList').innerHTML = listed.length ? listed.map(i => {
+    const late = i.age - PAY_TERMS_DAYS;
+    const isOver = late > 0;
+    const col = !isOver ? 'var(--st-30)' : late > 30 ? 'var(--st-old)' : late > 14 ? 'var(--st-over)' : 'var(--st-soon)';
     const n = parseInt(i.count, 10) || 1;
     const remind = lpActions.push(() => remindInvoice(i.id)) - 1;
     const paid = lpActions.push(() => markInvoicePaid(i.id)) - 1;
-    return `<div class="lp-inv">
+    const when = isOver ? `${late}d over` : (PAY_TERMS_DAYS - i.age === 0 ? 'due today' : `due in ${PAY_TERMS_DAYS - i.age}d`);
+    return `<div class="lp-inv${isOver ? '' : ' await'}">
       <div class="nm"><span class="lp-edge" style="background:${col}"></span><span>${piEsc(i.client)}</span></div>
       <div class="amt">${piMoney(i.amount)}</div>
-      <div class="meta">${n} invoice${n === 1 ? '' : 's'} · issued ${piEsc(formatDateDDMMYY(i.issueDate))}${i.comments ? ` · <q>${piEsc(i.comments)}</q>` : ''}</div>
-      <div class="acts"><span class="age" style="color:${col}">${i.age}d</span>
-        <button class="lp-btn ghost sm" onclick="lpRun(${remind})">Remind</button>
+      <div class="meta">${i.source === 'Job' ? 'Job' : n + ' invoice' + (n === 1 ? '' : 's')} · ${piEsc(formatDateDDMMYY(i.issueDate))}${i.comments && i.source !== 'Job' ? ` · <q>${piEsc(i.comments)}</q>` : ''}</div>
+      <div class="acts"><span class="age" style="color:${col}">${when}</span>
+        ${isOver ? `<button class="lp-btn ghost sm" onclick="lpRun(${remind})">Remind</button>` : ''}
         <button class="lp-btn ghost sm" onclick="lpRun(${paid})" aria-label="Mark ${piEsc(i.client)} paid">Paid</button></div>
     </div>`;
-  }).join('') : `<div class="lp-empty">Nothing outstanding. Tap <strong style="color:var(--gold-light)">Add invoice</strong> when a client is late paying — it's tracked here until you mark it paid.</div>`;
+  }).join('') : `<div class="lp-empty">Nothing outstanding. Invoices come from <strong style="color:var(--gold-light)">Log Job Done</strong> (enter the invoice amount) or <strong style="color:var(--gold-light)">Add invoice</strong>. They turn overdue 7 days after their date if not marked paid.</div>`;
+
+  // Collection — value of jobs logged in the last 30 days
+  const c30 = piToday(); c30.setDate(c30.getDate() - 30);
+  const jobInv = allInvoices.filter(i => i.source === 'Job' && (() => { const d = parseDateAU(i.issueDate); return d && d >= c30; })());
+  const colTotal = jobInv.reduce((s, i) => s + (Number(i.amount) || 0), 0);
+  const colPaid = jobInv.filter(i => String(i.status).toLowerCase() === 'paid').reduce((s, i) => s + (Number(i.amount) || 0), 0);
+  document.getElementById('lpColTotal').textContent = piMoney(colTotal);
+  document.getElementById('lpColSub').innerHTML = jobInv.length
+    ? `from <span class="m">${jobInv.length}</span> job${jobInv.length === 1 ? '' : 's'} logged`
+    : 'Enter an invoice amount when you log a job';
+  document.getElementById('lpColBar').innerHTML = colTotal ? `<div style="width:${Math.round(colPaid / colTotal * 100)}%;background:var(--st-done)"></div>` : '';
+  document.getElementById('lpColLegend').innerHTML = colTotal
+    ? `<span><i style="background:var(--st-done)"></i>Paid <b>${piMoney(colPaid)}</b></span><span><i style="background:rgba(255,255,255,0.18)"></i>Unpaid <b>${piMoney(colTotal - colPaid)}</b></span>` : '';
 
   // Status tiles
   const overdueSvc = rows.filter(r => r.days !== null && r.days <= 0).length;
@@ -8182,7 +8327,7 @@ async function saveOutreach() {
 
 
 // ── Apps Script helper (3.1.1) ──
-const APP_SCRIPT_VERSION = '3.1.1';
+const APP_SCRIPT_VERSION = '3.1.2';
 function appsScriptMsg(text, ok) {
   const el = document.getElementById('appsScriptMsg');
   if (!el) return;
@@ -8193,17 +8338,21 @@ function appsScriptMsg(text, ok) {
   el.classList.add('show');
   clearTimeout(appsScriptMsg._t); appsScriptMsg._t = setTimeout(() => el.classList.remove('show'), 6000);
 }
-function copyAppsScript() {
-  const code = document.getElementById('piAppsScriptCode').textContent.replace(/^\n/, '');
-  prCopyText(code).then(ok => appsScriptMsg(ok ? 'Copied — paste it into Code.gs in your Clients spreadsheet.' : 'Couldn’t copy on this device — try from a computer.', ok));
+function copyAppsScript(id, label) {
+  const code = document.getElementById(id).textContent.replace(/^\n/, '');
+  prCopyText(code).then(ok => appsScriptMsg(ok ? `${label} script copied — paste it into Code.gs of the ${label} spreadsheet.` : 'Couldn’t copy on this device — try from a computer.', ok));
 }
 async function checkAppsScript() {
-  appsScriptMsg('Checking…', true);
-  try {
-    const d = await piApi({ action: 'ping' });
-    if (d.version === APP_SCRIPT_VERSION) appsScriptMsg('Connected · Apps Script v' + d.version + ' · invoices sheet linked.', true);
-    else appsScriptMsg('Connected, but the Apps Script is ' + (d.version ? 'v' + d.version : 'an older version') + '. Copy the code above and deploy a new version.', false);
-  } catch (e) { appsScriptMsg('Couldn’t reach the Apps Script: ' + e.message, false); }
+  appsScriptMsg('Checking both scripts…', true);
+  const one = async (target, label) => {
+    try {
+      const d = await piApi({ action: 'ping' }, target);
+      if (d.version === APP_SCRIPT_VERSION) return { ok: true, text: `${label}: v${d.version} ✓` };
+      return { ok: false, text: `${label}: ${d.version ? 'v' + d.version : 'older version'} — paste the new code & deploy` };
+    } catch (e) { return { ok: false, text: `${label}: not reachable (${e.message})` }; }
+  };
+  const [j, i] = await Promise.all([one('jobs', 'Jobs Done'), one('invoices', 'Invoices')]);
+  appsScriptMsg(j.text + ' · ' + i.text, j.ok && i.ok);
 }
 
 // Keep the landing page in step with everything else that changes client data
