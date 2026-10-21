@@ -1504,6 +1504,40 @@
     color:var(--gold-light); font:600 11px 'Inter',sans-serif; letter-spacing:0.02em; white-space:nowrap; }
   .soon-badge.corner { position:absolute; top:-9px; right:10px; background:var(--navy); }
   .lp-short.is-soon { overflow:visible; }
+  .dev-folder { margin-top:4px; }
+  .dev-folder > summary { list-style:none; }
+  .dev-folder > summary::-webkit-details-marker { display:none; }
+  .dev-head { display:flex; align-items:center; justify-content:space-between; min-height:44px; padding:0 4px; cursor:pointer;
+    font-size:12px; font-weight:500; color:var(--white-muted); }
+  .dev-head:hover, .dev-folder[open] > .dev-head { color:var(--gold-light); }
+  .dev-body { display:flex; flex-direction:column; gap:12px; padding:6px 0 4px; }
+  .dev-sub-title { font-size:14px; font-weight:600; color:var(--gold-light); }
+  .dev-card { border:1px solid var(--line); border-radius:14px; padding:14px; background:rgba(255,255,255,0.02); display:flex; flex-direction:column; gap:8px; }
+  .dev-card-head { display:flex; justify-content:space-between; align-items:flex-start; gap:10px; }
+  .dev-card-title { font-size:15px; font-weight:600; color:var(--white); }
+  .dev-card-sheet { font-size:11px; color:var(--white-muted); margin-top:1px; }
+  .dev-card-purpose { font-size:12px; line-height:1.6; color:#C9CFDA; }
+  .dev-label { font-size:11px; color:var(--white-muted); margin-top:4px; }
+  .dev-url { font-family:var(--mono); font-size:11px; color:var(--white); background:var(--navy); border:1px solid var(--line); border-radius:8px; padding:8px 10px; word-break:break-all; }
+  .dev-code { margin:0; font-family:var(--mono); font-size:10.5px; line-height:1.5; color:#C9CFDA; background:var(--navy); border:1px solid var(--line); border-radius:8px; padding:8px 10px; white-space:pre; overflow:hidden; max-height:110px; }
+  .dev-removed { font-size:12px; color:var(--st-over); padding:8px 10px; border:1px dashed rgba(238,138,106,0.35); border-radius:8px; }
+  .dev-btns { display:flex; flex-wrap:wrap; gap:6px; }
+  .dev-btn { min-height:36px; padding:0 12px; border-radius:10px; border:1px solid var(--line-strong); background:transparent; color:var(--white); font:500 12px 'Inter',sans-serif; cursor:pointer; }
+  .dev-btn:hover { border-color:var(--gold); color:var(--gold-light); }
+  .dev-btn.danger { color:var(--st-over); border-color:rgba(238,138,106,0.35); }
+  .dev-btn.danger:hover { border-color:var(--st-over); color:var(--st-over); }
+  .dev-pill { flex-shrink:0; font-size:10.5px; font-weight:600; padding:3px 8px; border-radius:999px; border:1px solid rgba(201,168,76,0.45); color:var(--gold-light); }
+  .dev-pill.ok { border-color:rgba(95,208,142,0.35); color:var(--st-done); }
+  .dev-pill.warn { border-color:rgba(238,138,106,0.4); color:var(--st-over); }
+  .dev-confirm-box { max-width:380px; }
+  .dev-confirm-btns { display:flex; gap:8px; justify-content:flex-end; margin-top:8px; }
+  .dev-confirm-btns .lp-btn { min-width:110px; justify-content:center; }
+  .lp-btn.dev-danger { background:var(--st-over); color:var(--navy); }
+  .lp-btn.dev-danger:hover { background:#F4A387; }
+  .dev-editor-box { max-width:760px; }
+  .dev-url-input { width:100%; height:44px; border-radius:10px; border:1px solid var(--line-strong); background:var(--navy); color:var(--white); padding:0 12px; font:500 12px var(--mono); outline:none; box-sizing:border-box; }
+  .dev-code-input { width:100%; height:55vh; border-radius:10px; border:1px solid var(--line-strong); background:var(--navy); color:var(--white); padding:10px 12px; font:400 12px/1.55 var(--mono); outline:none; resize:vertical; box-sizing:border-box; white-space:pre; tab-size:2; }
+  .dev-url-input:focus, .dev-code-input:focus { border-color:var(--gold); }
   .lp-svc { padding:12px 0; border-top:1px solid var(--line); }
   .lp-svc .r { display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:500; }
   .lp-svc .f { font-size:11px; font-weight:600; white-space:nowrap; }
@@ -1724,7 +1758,7 @@
   <div class="sp-title">Pi Admin</div>
   <div class="sp-sub">Pi Cleaning Services</div>
   <div class="sp-line"><span></span></div>
-  <div class="splash-version">v3.1.3</div>
+  <div class="splash-version">v3.1.4</div>
 </div>
 
 <!-- Overlay for drawer -->
@@ -1805,7 +1839,7 @@
         <span class="nav-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg></span>
         <div class="nav-item-text">
           <div class="nav-item-label">New Features</div>
-          <div class="nav-item-sub">What's new in v3.1.3</div>
+          <div class="nav-item-sub">What's new in v3.1.4</div>
         </div>
         <span class="new-feature-badge">NEW</span>
       </button>
@@ -1842,7 +1876,7 @@
         <span class="nav-item-arrow">›</span>
       </button>
     </div>
-    <div class="drawer-version-bar-inline">Pi Admin · V 3.1.3 · Pi Cleaning Services</div>
+    <div class="drawer-version-bar-inline">Pi Admin · V 3.1.4 · Pi Cleaning Services</div>
   </div>
   <!-- ── PANEL: PAY CALCULATOR ── -->
   <div class="drawer-panel" id="panel-paycalc">
@@ -2503,29 +2537,6 @@
 
     <div class="divider" style="margin:20px 0;"></div>
 
-    <!-- Apps Script (3.1.1): the exact server code this app needs, ready to copy -->
-    <details class="settings-section bc-folder" id="appsScriptFolder">
-      <summary class="bc-folder-head">
-        <span class="bc-sub-text"><span class="settings-section-title" style="margin:0;">Apps Script</span><span class="bc-sub-desc">Copy the server code &amp; check the connection</span></span>
-        <span class="bc-chev">›</span>
-      </summary>
-      <div class="bc-folder-body">
-        <div class="settings-section-desc" style="margin:4px 0 0;">Two separate scripts, one per Google Sheet — they never touch each other's data. For each one: open that spreadsheet → Extensions → Apps Script → replace Code.gs → run <strong style="color:var(--white)">setupSheet</strong> → Deploy → Manage deployments → Edit → <strong style="color:var(--white)">New version</strong> → Deploy.</div>
-        <div class="as-row">
-          <div><div class="settings-toggle-label">Jobs Done script</div><div class="settings-toggle-sub">Clients, Jobs Done, reminders, menu lock, outreach</div></div>
-          <button class="reminder-sms-btn" onclick="copyAppsScript('piAppsScriptCode','Jobs Done')">Copy</button>
-        </div>
-        <div class="as-row">
-          <div><div class="settings-toggle-label">Invoices script</div><div class="settings-toggle-sub">Overdue invoices &amp; collection — separate sheet</div></div>
-          <button class="reminder-sms-btn" onclick="copyAppsScript('piInvoicesScriptCode','Invoices')">Copy</button>
-        </div>
-        <button class="gs-load-btn" style="margin-top:0;" onclick="checkAppsScript()">Check both connections</button>
-        <div class="settings-saved-msg" id="appsScriptMsg"></div>
-      </div>
-    </details>
-
-    <div class="divider" style="margin:20px 0;"></div>
-
     <!-- Communication folder (v2.1.2): send-via toggle + Broadcast templates -->
     <details class="settings-section bc-folder" id="communicationFolder">
       <summary class="bc-folder-head">
@@ -2711,6 +2722,23 @@
       </label>
       <div class="settings-saved-msg" id="quoteCalcSaved">Quote Calculator setting saved!</div>
     </div>
+
+    <div class="divider" style="margin:20px 0;"></div>
+
+    <!-- Developer (3.1.4): every Apps Script the app uses, listed individually -->
+    <details class="settings-section dev-folder" id="developerFolder">
+      <summary class="dev-head">
+        <span>Developer</span>
+        <span class="bc-chev">›</span>
+      </summary>
+      <div class="dev-body">
+        <div class="dev-sub-title">Apps Script</div>
+        <div class="settings-section-desc" style="margin:0;">Each Google Sheet has its own script. Copy a script to paste into that sheet (Extensions → Apps Script → replace Code.gs → run <strong style="color:var(--white)">setupSheet</strong> → Deploy → Manage deployments → Edit → <strong style="color:var(--white)">New version</strong>). Changes made here are saved on this device only.</div>
+        <div id="devScripts"></div>
+        <button class="gs-load-btn" style="margin-top:0;" onclick="checkAppsScript()">Check both connections</button>
+        <div class="settings-saved-msg" id="appsScriptMsg"></div>
+      </div>
+    </details>
   </div>
 
   <!-- ── PANEL: PROSPECTS ── -->
@@ -2818,7 +2846,14 @@
   <!-- ── PANEL: NEW FEATURES ── -->
   <div class="drawer-panel" id="panel-newfeatures">
     <div class="section-tag">Latest Update</div>
-    <div class="section-heading">What's New in v3.1.3</div>
+    <div class="section-heading">What's New in v3.1.4</div>
+    <div class="new-feature-card" style="border-color:rgba(201,168,76,0.45);background:rgba(201,168,76,0.07);">
+      <div class="nf-icon"></div>
+      <div class="nf-content">
+        <div class="nf-title" style="color:var(--gold);">Developer Settings — v3.1.4</div>
+        <div class="nf-desc">A small Developer folder at the bottom of Settings lists each Apps Script with what it's for. Copy, change or remove any script's code or web app link — every change asks "Are you sure?" and then "Yes, go ahead" before anything is saved.</div>
+      </div>
+    </div>
     <div class="new-feature-card" style="border-color:rgba(201,168,76,0.45);background:rgba(201,168,76,0.07);">
       <div class="nf-icon"></div>
       <div class="nf-content">
@@ -4141,7 +4176,7 @@ function setupSheet() { getInvSheet(); }
       </aside>
     </div>
   </div>
-  <footer class="footer">© 2026 <span>Pi Cleaning Services</span> · Pi Admin v3.1.3</footer>
+  <footer class="footer">© 2026 <span>Pi Cleaning Services</span> · Pi Admin v3.1.4</footer>
 
   <!-- Add invoice modal -->
   <div class="lp-modal" id="lpInvModal" onclick="if(event.target===this) closeInvoiceModal()">
@@ -4205,6 +4240,35 @@ function setupSheet() { getInvSheet(); }
     </div>
   </div>
   <div class="lp-toast" id="lpToast"></div>
+
+  <!-- Developer: confirm dialog (two steps) -->
+  <div class="lp-modal" id="devConfirm">
+    <div class="lp-modal-box dev-confirm-box" role="alertdialog" aria-modal="true" aria-labelledby="devConfirmTitle">
+      <div class="lp-modal-title" id="devConfirmTitle">Are you sure?</div>
+      <div class="lp-modal-sub" id="devConfirmText"></div>
+      <div class="dev-confirm-btns">
+        <button class="lp-btn ghost" id="devConfirmNo">Cancel</button>
+        <button class="lp-btn" id="devConfirmYes">Sure</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Developer: editor -->
+  <div class="lp-modal" id="devEditor">
+    <div class="lp-modal-box dev-editor-box">
+      <div class="lp-modal-title" id="devEditorTitle">Change</div>
+      <div class="lp-modal-sub" id="devEditorSub"></div>
+      <input id="devEditorUrl" class="dev-url-input" type="url" spellcheck="false" autocomplete="off">
+      <textarea id="devEditorCode" class="dev-code-input" spellcheck="false" autocomplete="off" autocapitalize="off"></textarea>
+      <div class="lp-modal-foot">
+        <span class="lp-hint" id="devEditorHint"></span>
+        <div style="display:flex;gap:8px;">
+          <button class="lp-btn ghost" onclick="closeDevEditor()">Cancel</button>
+          <button class="lp-btn" onclick="saveDevEditor()">Save change</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -4866,7 +4930,10 @@ function showGsConnected() {
 }
 
 function getGsUrl() {
-  return GS_HARDCODED_URL;
+  return devGet('url', 'jobs') || GS_HARDCODED_URL;
+}
+function getInvoicesUrl() {
+  return devGet('url', 'invoices') || INVOICES_URL;
 }
 
 // loadClients removed — use refreshClients() instead
@@ -7321,7 +7388,7 @@ function exportPayPDF() {
   </tbody>
 </table>
 ${gstSummary}
-<div class="footer">PI Cleaning Services Pty Ltd &nbsp;·&nbsp; Pi Admin v3.1.3 &nbsp;·&nbsp; Pay Calculator Export</div>
+<div class="footer">PI Cleaning Services Pty Ltd &nbsp;·&nbsp; Pi Admin v3.1.4 &nbsp;·&nbsp; Pay Calculator Export</div>
 </body></html>`;
 
   const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
@@ -7678,7 +7745,7 @@ function lpToast(msg) {
 const INVOICE_ACTIONS = ['getInvoices', 'addInvoice', 'markInvoicePaid', 'deleteInvoice'];
 async function piApi(params, target) {
   // Invoices live in their own sheet + script; everything else goes to Jobs Done
-  const url = (target === 'invoices' || INVOICE_ACTIONS.indexOf(params.action) >= 0) ? INVOICES_URL : getGsUrl();
+  const url = (target === 'invoices' || INVOICE_ACTIONS.indexOf(params.action) >= 0) ? getInvoicesUrl() : getGsUrl();
   const qs = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k] == null ? '' : params[k])).join('&');
   const r = await fetch(url + '?' + qs + '&_ts=' + Date.now(), { redirect: 'follow' });
   const d = await r.json();
@@ -8360,6 +8427,157 @@ function appsScriptMsg(text, ok) {
   el.classList.add('show');
   clearTimeout(appsScriptMsg._t); appsScriptMsg._t = setTimeout(() => el.classList.remove('show'), 6000);
 }
+
+// ══════════════════════════════════════════
+//  DEVELOPER (3.1.4) — view, copy, change or remove each Apps Script
+//  Overrides live in this device's storage; Restore default undoes them.
+// ══════════════════════════════════════════
+const DEV_SCRIPTS = [
+  { key: 'jobs', title: 'Jobs Done script', sheet: 'Jobs Done / Clients sheet', codeEl: 'piAppsScriptCode',
+    purpose: 'Runs your Clients sheet: loads clients for Jobs Done, Clients & Reminders and the home screen; saves logged jobs and new clients; the employee menu lock; and the outreach log the Pi Agent learns from.',
+    defaultUrl: () => GS_HARDCODED_URL },
+  { key: 'invoices', title: 'Invoices script', sheet: 'Invoices sheet (separate)', codeEl: 'piInvoicesScriptCode',
+    purpose: 'Runs your separate Invoices sheet only: overdue invoices, awaiting payment, Collection (last 30 days) and the invoices added when you log a job. It can’t read or change the Clients sheet.',
+    defaultUrl: () => INVOICES_URL }
+];
+const DEV_REMOVED = '__removed__';
+function devStoreKey(kind, key) { return 'pi_dev_' + kind + '_' + key; }
+function devGet(kind, key) { try { return localStorage.getItem(devStoreKey(kind, key)); } catch (e) { return null; } }
+function devSet(kind, key, v) { try { if (v === null) localStorage.removeItem(devStoreKey(kind, key)); else localStorage.setItem(devStoreKey(kind, key), v); } catch (e) {} }
+function devScript(key) { return DEV_SCRIPTS.find(x => x.key === key); }
+function devDefaultCode(key) { return document.getElementById(devScript(key).codeEl).textContent.replace(/^\n/, ''); }
+function devCode(key) {
+  const o = devGet('code', key);
+  if (o === DEV_REMOVED) return '';
+  return o !== null ? o : devDefaultCode(key);
+}
+function devCodeVersion(code) { const m = code.match(/SCRIPT_VERSION\s*=\s*'([^']+)'/); return m ? 'v' + m[1] : 'no version'; }
+
+function renderDevScripts() {
+  const box = document.getElementById('devScripts');
+  if (!box) return;
+  box.innerHTML = DEV_SCRIPTS.map(d => {
+    const code = devCode(d.key);
+    const codeState = devGet('code', d.key);
+    const urlOverride = devGet('url', d.key);
+    const url = urlOverride || d.defaultUrl();
+    const status = codeState === DEV_REMOVED ? '<span class="dev-pill warn">Removed</span>'
+      : codeState !== null ? '<span class="dev-pill">Changed</span>' : '<span class="dev-pill ok">Built-in</span>';
+    const lines = code ? code.split('\n').length : 0;
+    return `<div class="dev-card">
+      <div class="dev-card-head"><div><div class="dev-card-title">${d.title}</div><div class="dev-card-sheet">${d.sheet}</div></div>${status}</div>
+      <div class="dev-card-purpose">${d.purpose}</div>
+      <div class="dev-label">Web app link${urlOverride ? ' · changed' : ''}</div>
+      <div class="dev-url">${piEsc(url)}</div>
+      <div class="dev-btns">
+        <button class="dev-btn" onclick="devCopy('${d.key}','url')">Copy</button>
+        <button class="dev-btn" onclick="devStartChange('${d.key}','url')">Change</button>
+        ${urlOverride ? `<button class="dev-btn" onclick="devRestore('${d.key}','url')">Restore default</button>` : ''}
+      </div>
+      <div class="dev-label">Script code · ${code ? devCodeVersion(code) + ' · ' + lines + ' lines' : 'removed'}</div>
+      ${code ? `<pre class="dev-code" id="devCode-${d.key}">${piEsc(code.split('\n').slice(0, 6).join('\n'))}\n…</pre>` : `<div class="dev-removed">No code stored. Restore default to bring it back.</div>`}
+      <div class="dev-btns">
+        ${code ? `<button class="dev-btn" onclick="devCopy('${d.key}','code')">Copy</button>` : ''}
+        <button class="dev-btn" onclick="devStartChange('${d.key}','code')">Change</button>
+        ${code ? `<button class="dev-btn danger" onclick="devStartRemove('${d.key}')">Remove</button>` : ''}
+        ${codeState !== null ? `<button class="dev-btn" onclick="devRestore('${d.key}','code')">Restore default</button>` : ''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function devCopy(key, kind) {
+  const d = devScript(key);
+  const text = kind === 'url' ? (devGet('url', key) || d.defaultUrl()) : devCode(key);
+  prCopyText(text).then(ok => appsScriptMsg(ok ? `${d.title} ${kind === 'url' ? 'link' : 'code'} copied.` : 'Couldn’t copy on this device — try from a computer.', ok));
+}
+
+// Two-step confirmation: "Are you sure?" → "Yes, go ahead"
+function devConfirm(step1, step2, onYes) {
+  const box = document.getElementById('devConfirm');
+  const title = document.getElementById('devConfirmTitle');
+  const text = document.getElementById('devConfirmText');
+  const yes = document.getElementById('devConfirmYes');
+  const no = document.getElementById('devConfirmNo');
+  const close = () => box.classList.remove('show');
+  no.onclick = close;
+  title.textContent = 'Are you sure?';
+  text.textContent = step1;
+  yes.textContent = 'Sure';
+  yes.className = 'lp-btn';
+  yes.onclick = () => {
+    title.textContent = 'Final check';
+    text.textContent = step2;
+    yes.textContent = 'Yes, go ahead';
+    yes.className = 'lp-btn dev-danger';
+    yes.onclick = () => { close(); onYes(); };
+  };
+  box.classList.add('show');
+}
+
+let devEditing = null;
+function devStartChange(key, kind) {
+  const d = devScript(key);
+  const what = kind === 'url' ? 'web app link' : 'code';
+  devConfirm(
+    `You're about to change the ${d.title} ${what} saved in this app.`,
+    kind === 'url'
+      ? `The app will send all ${d.key === 'jobs' ? 'Jobs Done & client' : 'invoice'} data to the new link from now on. A wrong link stops that part of the app working until you restore the default.`
+      : `The code you save here replaces the copy kept in this app. It doesn't change the script in Google — you still paste and deploy it there.`,
+    () => openDevEditor(key, kind));
+}
+function openDevEditor(key, kind) {
+  const d = devScript(key);
+  devEditing = { key, kind };
+  document.getElementById('devEditorTitle').textContent = `${d.title} — ${kind === 'url' ? 'web app link' : 'code'}`;
+  document.getElementById('devEditorSub').textContent = kind === 'url'
+    ? 'Paste the /exec link from Deploy → Manage deployments in that spreadsheet’s Apps Script.'
+    : 'Edit or paste the full script. Saved on this device; Restore default brings back the built-in version.';
+  const url = document.getElementById('devEditorUrl'), code = document.getElementById('devEditorCode');
+  url.style.display = kind === 'url' ? '' : 'none';
+  code.style.display = kind === 'code' ? '' : 'none';
+  url.value = devGet('url', key) || d.defaultUrl();
+  code.value = devCode(key);
+  const hint = document.getElementById('devEditorHint'); hint.textContent = ''; hint.className = 'lp-hint';
+  document.getElementById('devEditor').classList.add('show');
+}
+function closeDevEditor() { document.getElementById('devEditor').classList.remove('show'); devEditing = null; }
+function saveDevEditor() {
+  if (!devEditing) return;
+  const { key, kind } = devEditing;
+  const d = devScript(key);
+  const hint = document.getElementById('devEditorHint');
+  if (kind === 'url') {
+    const v = document.getElementById('devEditorUrl').value.trim();
+    if (!/^https:\/\/script\.google\.com\/macros\/s\/[A-Za-z0-9_-]+\/exec$/.test(v)) {
+      hint.textContent = 'That doesn’t look like an Apps Script web app link (…/macros/s/…/exec).'; hint.className = 'lp-hint err'; return;
+    }
+    devSet('url', key, v === d.defaultUrl() ? null : v);
+  } else {
+    const v = document.getElementById('devEditorCode').value;
+    if (!v.trim()) { hint.textContent = 'The code is empty — use Remove instead.'; hint.className = 'lp-hint err'; return; }
+    devSet('code', key, v === devDefaultCode(key) ? null : v);
+  }
+  closeDevEditor();
+  renderDevScripts();
+  appsScriptMsg(`${d.title} ${kind === 'url' ? 'link' : 'code'} updated.`, true);
+  if (kind === 'url') refreshLanding();
+}
+function devStartRemove(key) {
+  const d = devScript(key);
+  devConfirm(`You're about to remove the ${d.title} code stored in this app.`,
+    'You won’t be able to copy it from here until you Restore default. The script already running in Google keeps working.',
+    () => { devSet('code', key, DEV_REMOVED); renderDevScripts(); appsScriptMsg(`${d.title} code removed from this app.`, true); });
+}
+function devRestore(key, kind) {
+  const d = devScript(key);
+  devSet(kind, key, null);
+  renderDevScripts();
+  appsScriptMsg(`${d.title} ${kind === 'url' ? 'link' : 'code'} restored to the built-in version.`, true);
+  if (kind === 'url') refreshLanding();
+}
+document.addEventListener('DOMContentLoaded', renderDevScripts);
+
 function copyAppsScript(id, label) {
   const code = document.getElementById(id).textContent.replace(/^\n/, '');
   prCopyText(code).then(ok => appsScriptMsg(ok ? `${label} script copied — paste it into Code.gs of the ${label} spreadsheet.` : 'Couldn’t copy on this device — try from a computer.', ok));
