@@ -1496,6 +1496,14 @@
   .lp-col-legend b { font-family:var(--mono); font-weight:500; color:var(--white); }
   .as-row { display:flex; align-items:center; justify-content:space-between; gap:12px; padding:12px 14px; border:1px solid var(--line); border-radius:12px; background:rgba(255,255,255,0.02); }
   .as-row .reminder-sms-btn { flex:0 0 auto; padding:0 18px; }
+  .is-soon { cursor:not-allowed; position:relative; }
+  .is-soon > :not(.soon-badge), .lp-short.is-soon > svg { opacity:0.38; filter:grayscale(0.4); }
+  .lp-short.is-soon { color:rgba(242,238,228,0.4); }
+  .is-soon:hover { background:transparent !important; border-color:var(--line) !important; color:inherit !important; }
+  .soon-badge { flex-shrink:0; padding:3px 9px; border-radius:999px; border:1px solid rgba(201,168,76,0.55); background:rgba(201,168,76,0.12);
+    color:var(--gold-light); font:600 11px 'Inter',sans-serif; letter-spacing:0.02em; white-space:nowrap; }
+  .soon-badge.corner { position:absolute; top:-9px; right:10px; background:var(--navy); }
+  .lp-short.is-soon { overflow:visible; }
   .lp-svc { padding:12px 0; border-top:1px solid var(--line); }
   .lp-svc .r { display:flex; justify-content:space-between; gap:10px; font-size:14px; font-weight:500; }
   .lp-svc .f { font-size:11px; font-weight:600; white-space:nowrap; }
@@ -1716,7 +1724,7 @@
   <div class="sp-title">Pi Admin</div>
   <div class="sp-sub">Pi Cleaning Services</div>
   <div class="sp-line"><span></span></div>
-  <div class="splash-version">v3.1.2</div>
+  <div class="splash-version">v3.1.3</div>
 </div>
 
 <!-- Overlay for drawer -->
@@ -1737,13 +1745,13 @@
   <!-- ── PANEL 0: MAIN MENU ── -->
   <div class="drawer-panel active" id="panel-menu" style="padding-top:8px;">
     <div class="drawer-nav-menu">
-      <button class="drawer-nav-item" id="tab-livemap" onclick="openLiveMap()">
+      <button class="drawer-nav-item is-soon" id="tab-livemap" onclick="liveMapSoon()" aria-disabled="true">
         <span class="nav-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/></svg></span>
         <div class="nav-item-text">
           <div class="nav-item-label">Live Map</div>
           <div class="nav-item-sub">Track active employees in real time</div>
         </div>
-        <span class="nav-item-arrow">›</span>
+        <span class="soon-badge">Coming soon</span>
       </button>
       <button class="drawer-nav-item" id="tab-prospects" onclick="switchDrawerTab('prospects')">
         <span class="nav-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11v2a1 1 0 0 0 1 1h2l5 4V6L6 10H4a1 1 0 0 0-1 1z"/><path d="M15 9a4 4 0 0 1 0 6M18 6a8 8 0 0 1 0 12"/></svg></span>
@@ -1797,7 +1805,7 @@
         <span class="nav-item-icon"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6"/></svg></span>
         <div class="nav-item-text">
           <div class="nav-item-label">New Features</div>
-          <div class="nav-item-sub">What's new in v3.1.2</div>
+          <div class="nav-item-sub">What's new in v3.1.3</div>
         </div>
         <span class="new-feature-badge">NEW</span>
       </button>
@@ -1834,7 +1842,7 @@
         <span class="nav-item-arrow">›</span>
       </button>
     </div>
-    <div class="drawer-version-bar-inline">Pi Admin · V 3.1.2 · Pi Cleaning Services</div>
+    <div class="drawer-version-bar-inline">Pi Admin · V 3.1.3 · Pi Cleaning Services</div>
   </div>
   <!-- ── PANEL: PAY CALCULATOR ── -->
   <div class="drawer-panel" id="panel-paycalc">
@@ -2810,7 +2818,14 @@
   <!-- ── PANEL: NEW FEATURES ── -->
   <div class="drawer-panel" id="panel-newfeatures">
     <div class="section-tag">Latest Update</div>
-    <div class="section-heading">What's New in v3.1.2</div>
+    <div class="section-heading">What's New in v3.1.3</div>
+    <div class="new-feature-card" style="border-color:rgba(201,168,76,0.45);background:rgba(201,168,76,0.07);">
+      <div class="nf-icon"></div>
+      <div class="nf-content">
+        <div class="nf-title" style="color:var(--gold);">Live Map — Coming Soon · v3.1.3</div>
+        <div class="nf-desc">Live Map is paused while it's being rebuilt. It's marked "Coming soon" in the menu and on the home screen.</div>
+      </div>
+    </div>
     <div class="new-feature-card" style="border-color:rgba(201,168,76,0.45);background:rgba(201,168,76,0.07);">
       <div class="nf-icon"></div>
       <div class="nf-content">
@@ -4072,7 +4087,7 @@ function setupSheet() { getInvSheet(); }
 
         <!-- Shortcuts -->
         <section class="lp-shortcuts">
-          <button class="lp-short" onclick="openLiveMap()"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/></svg>Live map</button>
+          <button class="lp-short is-soon" onclick="liveMapSoon()" aria-disabled="true"><span class="soon-badge corner">Coming soon</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/></svg>Live map</button>
           <button class="lp-short" onclick="openDrawerTab('payreminder')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="6" width="18" height="12" rx="2"/><path d="M3 10h18"/></svg>Payment reminder</button>
           <button class="lp-short" onclick="openDrawerTab('review')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l2.6 5.6 6 .7-4.5 4.1 1.2 6L12 16.5 6.7 19.4l1.2-6L3.4 9.3l6-.7z"/></svg>Request review</button>
           <button class="lp-short" onclick="openDrawerTab('paycalc')"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 7h6M9 11h1M14 11h1M9 15h1M14 15h1"/></svg>Pay calculator</button>
@@ -4126,7 +4141,7 @@ function setupSheet() { getInvSheet(); }
       </aside>
     </div>
   </div>
-  <footer class="footer">© 2026 <span>Pi Cleaning Services</span> · Pi Admin v3.1.2</footer>
+  <footer class="footer">© 2026 <span>Pi Cleaning Services</span> · Pi Admin v3.1.3</footer>
 
   <!-- Add invoice modal -->
   <div class="lp-modal" id="lpInvModal" onclick="if(event.target===this) closeInvoiceModal()">
@@ -4210,6 +4225,7 @@ const CLIENTS_CACHE_KEY = 'pi_clients_cache';
 //  PAGE SWITCHING
 // ══════════════════════════════════════════
 function showPage(page) {
+  if (page === 'dashboard' && typeof LIVE_MAP_LOCKED !== 'undefined' && LIVE_MAP_LOCKED) { liveMapSoon(); return; }
   document.getElementById('page-dashboard').style.display = page === 'dashboard' ? 'flex' : 'none';
   const homeEl = document.getElementById('page-home');
   if (homeEl) homeEl.style.display = page === 'home' ? 'block' : 'none';
@@ -4221,7 +4237,13 @@ function showPage(page) {
 // ══════════════════════════════════════════
 let currentDrawerTab = 'review';
 
+// Live Map is locked for now (v3.1.3) — every entry point shows "Coming soon"
+const LIVE_MAP_LOCKED = true;
+function liveMapSoon() {
+  if (typeof lpToast === 'function') lpToast('Live Map is coming soon.');
+}
 function openLiveMap() {
+  if (LIVE_MAP_LOCKED) { liveMapSoon(); return; }
   closeDrawer();
   showPage('dashboard');
   if (!mapInitialised) { initMap(); mapInitialised = true; refreshDashboard(); }
@@ -7299,7 +7321,7 @@ function exportPayPDF() {
   </tbody>
 </table>
 ${gstSummary}
-<div class="footer">PI Cleaning Services Pty Ltd &nbsp;·&nbsp; Pi Admin v3.1.2 &nbsp;·&nbsp; Pay Calculator Export</div>
+<div class="footer">PI Cleaning Services Pty Ltd &nbsp;·&nbsp; Pi Admin v3.1.3 &nbsp;·&nbsp; Pay Calculator Export</div>
 </body></html>`;
 
   const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
@@ -7844,7 +7866,7 @@ function renderLanding() {
     { label: 'Overdue services', n: overdueSvc, u: 'clients', color: 'var(--st-over)', go: "openDrawerTab('jobs')" },
     { label: 'Due ≤14 days', n: dueSoon, u: 'clients', color: 'var(--st-soon)', go: "openDrawerTab('clients-reminders');switchCRTab('reminders')" },
     { label: 'Done ≤7 days', n: done7, u: 'jobs', color: 'var(--st-done)', go: "openDrawerTab('jobs')" },
-    { label: 'On shift now', n: onShift, u: onBreak ? onBreak + ' on break' : 'staff', color: 'var(--st-30)', go: 'openLiveMap()' }
+    { label: 'On shift now', n: onShift, u: onBreak ? onBreak + ' on break' : 'staff', color: 'var(--st-30)', go: 'liveMapSoon()' }
   ];
   document.getElementById('lpTiles').innerHTML = tiles.map(t => `
     <button class="lp-tile" onclick="${t.go}"><span class="t">${t.label}<i style="background:${t.color}"></i></span>
