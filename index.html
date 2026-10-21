@@ -3339,8 +3339,8 @@
 //         add/update, so the "Jobs Done" screen in the app and the
 //         raw sheet always match.
 //  v3.1.2 (Oct 2026): invoice code moved to its own script.
-//  v3.0.0 (Oct 2026): "Outreach" tab (prospecting log for the Pi Agent) — both are
-//         created automatically the first time they're used.
+//  v3.0.0 (Oct 2026): "Outreach" tab (prospecting log for the Pi Agent),
+//         created automatically the first time it's used.
 //  v2.1.1 FIX (Oct 2026): saves now arrive via GET (POST is kept as a
 //         fallback), writes are locked so two saves can't collide,
 //         update checks the row still belongs to the right client,
@@ -3598,7 +3598,7 @@ function getOrCreateTab(name, headers, widths, ss) {
 
 function styleNewTab(sheet, headers, widths) {
   sheet.getRange(1, 1, 1, headers.length).setValues([headers])
-    .setBackground('#0B1424').setFontColor('#C9A84C').setFontWeight('bold');
+    .setBackground('#0A1A3D').setFontColor('#C9A84C').setFontWeight('bold');
   sheet.setFrozenRows(1);
   widths.forEach((w, i) => sheet.setColumnWidth(i + 1, w));
 }
