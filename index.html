@@ -281,6 +281,7 @@
   .pw-btn { flex: 1; height: 54px; border-radius: 14px; font-family: inherit; font-size: 15px; cursor: pointer; transition: transform 0.1s; }
   .pw-btn-ghost { border: 1px solid #2a375c; background: #16213f; color: #eef1f7; font-weight: 500; }
   .pw-btn-ghost.on-break { border-color: #6fd6c8; color: #6fd6c8; }
+  .pw-btn-qr { flex: none; width: 100%; height: 50px; margin-bottom: 6px; border: 1px solid rgba(216,182,90,0.55); background: transparent; color: #d8b65a; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 9px; }
   .pw-btn-gold { border: none; background: #d8b65a; color: #1a1606; font-weight: 600; }
   .pw-link-muted { background: none; border: none; padding: 10px; color: #a3acc2; font-family: inherit; font-size: 13px; cursor: pointer; }
 
@@ -325,10 +326,15 @@
   .ci2-btn { width: 100%; height: 54px; border-radius: 14px; border: none; background: var(--c-accent); color: var(--c-accent-ink); font-family: inherit; font-size: 16px; font-weight: 600; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
   .ci2-btn:disabled { opacity: 0.35; cursor: not-allowed; }
   .ci2-btn:not(:disabled):active, .ci2-icon-btn:active, .ci2-gps-btn:active { transform: scale(0.98); }
+  .ci2-btn-qr { display: flex; align-items: center; justify-content: center; gap: 9px; }
+  .ci2-btn-qr svg { color: var(--c-accent-ink); }
+  .ci2-btn-alt { width: 100%; height: 50px; margin-top: 10px; border-radius: 14px; border: 1px solid var(--c-line); background: transparent; color: var(--c-text); font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; transition: opacity 0.2s, transform 0.1s; }
+  .ci2-btn-alt:disabled { opacity: 0.4; cursor: not-allowed; }
+  .ci2-btn-alt:not(:disabled):active { transform: scale(0.98); }
   .ci2-qr-btn { width: 100%; height: 50px; margin-top: 10px; border-radius: 14px; border: 1px solid var(--c-line); background: transparent; color: var(--c-text); font-family: inherit; font-size: 15px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 9px; cursor: pointer; }
   .ci2-qr-btn:active { transform: scale(0.98); }
   .ci2-qr-btn svg { color: var(--c-accent); }
-  .ci2-or { display: flex; align-items: center; gap: 10px; margin: 10px 2px 0; font-size: 11px; color: var(--c-muted); }
+  .ci2-or { display: flex; align-items: center; gap: 10px; margin: 12px 2px 2px; font-size: 11px; color: var(--c-muted); }
   .ci2-or::before, .ci2-or::after { content: ''; flex: 1; height: 1px; background: var(--c-line); }
   /* QR scanner */
   .qr-overlay { position: fixed; inset: 0; z-index: 9000; background: #070d1c; display: none; flex-direction: column; color: #eef1f7; font-family: 'IBM Plex Sans', sans-serif; }
@@ -1475,7 +1481,7 @@
 
   <div class="ci2-scroll">
     <h1 class="ci2-greet">Good <span id="greeting-time">morning</span><span id="ci-greet-name"></span></h1>
-    <p class="ci2-lead">Three quick steps and you're on the clock.</p>
+    <p class="ci2-lead">Add your details and job address, then scan the QR code on site.</p>
 
     <!-- Returning employee (shown when credentials are saved) -->
     <div id="returning-banner" class="ci2-who" style="display:none;">
@@ -1533,9 +1539,9 @@
   </div>
 
   <div class="ci2-footer">
-    <button class="ci2-btn" id="btn-ci" onclick="standardClockIn()" disabled>Clock in</button>
+    <button class="ci2-btn ci2-btn-qr" id="btn-qr-ci" onclick="startQRClockIn()" disabled><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><rect x="8" y="8" width="3" height="3"/><rect x="13" y="8" width="3" height="3"/><rect x="8" y="13" width="3" height="3"/><path d="M13 13h3v3"/></svg>Scan QR to clock in</button>
     <div class="ci2-or">or</div>
-    <button class="ci2-qr-btn" id="btn-qr-ci" onclick="startQRClockIn()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><rect x="8" y="8" width="3" height="3"/><rect x="13" y="8" width="3" height="3"/><rect x="8" y="13" width="3" height="3"/><path d="M13 13h3v3"/></svg>Scan QR to clock in</button>
+    <button class="ci2-btn-alt" id="btn-ci" onclick="standardClockIn()" disabled>Clock in</button>
     <div class="ci2-version">Employee Portal · v2.1.0</div>
   </div>
 </div>
@@ -1614,6 +1620,7 @@
   </div>
 
   <div class="pw-footer">
+    <button class="pw-btn pw-btn-qr" id="btn-qr-co" onclick="startQRClockOut()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><rect x="8" y="8" width="3" height="3"/><rect x="13" y="8" width="3" height="3"/><rect x="8" y="13" width="3" height="3"/><path d="M13 13h3v3"/></svg>Scan QR to clock out</button>
     <div class="pw-actions">
       <button class="pw-btn pw-btn-ghost" id="break-btn" onclick="toggleBreak()">Take break</button>
       <button class="pw-btn pw-btn-gold" onclick="confirmClockOut()">Clock out</button>
@@ -1721,15 +1728,15 @@
     <div style="background:rgba(239,100,97,0.08);border:1px solid rgba(239,100,97,0.3);border-radius:12px;padding:14px 16px;margin-bottom:18px;display:flex;align-items:flex-start;gap:10px;">
       <span style="flex-shrink:0;color:var(--danger);display:flex;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></span>
       <div>
-        <div style="font-size:13px;font-weight:700;color:var(--danger);margin-bottom:4px;">Location or QR scan required</div>
-        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">Capture your GPS location, or scan the Employee Portal QR code on site, before clocking out. This confirms where you finished and is required by company policy.</div>
+        <div style="font-size:13px;font-weight:700;color:var(--danger);margin-bottom:4px;">Location capture is mandatory</div>
+        <div style="font-size:12px;color:var(--text-muted);line-height:1.6;">You must capture your GPS location before clocking out — whether you tap Clock out or scan the QR code. This confirms where you finished and is required by company policy.</div>
       </div>
     </div>
     <div id="co-loc-status" style="min-height:20px;text-align:center;font-size:13px;color:var(--text-muted);margin-bottom:14px;"></div>
     <button id="co-loc-btn" onclick="captureClockOutLocation()" style="width:100%;background:rgba(216,182,90,0.1);border:1.5px dashed rgba(216,182,90,0.5);border-radius:12px;padding:16px;color:var(--gold);font-family:'IBM Plex Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:12px;transition:all 0.2s;">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg> Capture my location
     </button>
-    <button class="co-qr-btn" id="co-qr-btn" onclick="startQRClockOut()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><rect x="8" y="8" width="3" height="3"/><rect x="13" y="8" width="3" height="3"/><rect x="8" y="13" width="3" height="3"/><path d="M13 13h3v3"/></svg>Scan QR to clock out instead</button>
+    <button class="co-qr-btn" id="co-qr-btn" onclick="startQRClockOut()"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8V5a1 1 0 0 1 1-1h3M16 4h3a1 1 0 0 1 1 1v3M20 16v3a1 1 0 0 1-1 1h-3M8 20H5a1 1 0 0 1-1-1v-3"/><rect x="8" y="8" width="3" height="3"/><rect x="13" y="8" width="3" height="3"/><rect x="8" y="13" width="3" height="3"/><path d="M13 13h3v3"/></svg>Scan QR to clock out</button>
     <button id="co-loc-proceed-btn" onclick="proceedToClockOutConfirm()" style="display:none;width:100%;background:var(--gold);border:none;border-radius:12px;padding:14px;font-family:'IBM Plex Sans',sans-serif;font-size:15px;font-weight:600;color:var(--navy);cursor:pointer;margin-bottom:10px;">
       Location captured — continue
     </button>
@@ -2488,13 +2495,28 @@ setInterval(updateCITime, 1000);
 ['emp-name','emp-id','job-address'].forEach(id => {
   document.getElementById(id)?.addEventListener('input', checkReady);
 });
+const STD_CLOCKIN_DELAY_S = 10;
+let ciQrReadySince = null, ciReadyTimer = null;
 function checkReady() {
   const creds = state._savedCreds;
   const n = creds ? creds.name : document.getElementById('emp-name').value.trim();
   const i = creds ? creds.id : document.getElementById('emp-id').value.trim();
   const a = document.getElementById('job-address').value.trim();
   const g = state.gps.lat !== null;
-  document.getElementById('btn-ci').disabled = !(n && i && a && g);
+  // QR first: available as soon as name, ID and job address are in
+  const qrReady = !!(n && i && a);
+  const qrBtn = document.getElementById('btn-qr-ci');
+  if (qrBtn) qrBtn.disabled = !qrReady;
+  if (qrReady && !ciQrReadySince) ciQrReadySince = Date.now();
+  if (!qrReady) ciQrReadySince = null;
+  // Standard Clock in unlocks STD_CLOCKIN_DELAY_S seconds after QR became available (still needs GPS)
+  const waited = ciQrReadySince ? Math.floor((Date.now() - ciQrReadySince) / 1000) : 0;
+  const left = Math.max(0, STD_CLOCKIN_DELAY_S - waited);
+  const ciBtn = document.getElementById('btn-ci');
+  ciBtn.disabled = !(qrReady && g && left === 0);
+  ciBtn.textContent = (qrReady && left > 0) ? `Clock in · available in ${left}s` : (qrReady && !g ? 'Clock in · capture GPS first' : 'Clock in');
+  clearTimeout(ciReadyTimer);
+  if (qrReady && left > 0) ciReadyTimer = setTimeout(checkReady, 1000);
   const sa = document.getElementById('step-addr'), sg = document.getElementById('step-gps'), ss = document.getElementById('step-shift');
   if (sa) sa.classList.toggle('done', !!a);
   if (sg) sg.classList.toggle('done', !!g);
@@ -2998,15 +3020,20 @@ function startQRClockIn() {
   const creds = state._savedCreds;
   const name = creds ? creds.name : document.getElementById('emp-name').value.trim();
   const id   = creds ? creds.id   : document.getElementById('emp-id').value.trim();
-  if (!name || !id) {
-    showToast('Enter your full name and Employee ID first');
-    document.getElementById(!name ? 'emp-name' : 'emp-id').focus();
+  const addr = document.getElementById('job-address').value.trim();
+  if (!name || !id || !addr) {
+    showToast('Enter your details and job address first');
+    document.getElementById(!name ? 'emp-name' : !id ? 'emp-id' : 'job-address').focus();
     return;
   }
   openQRScanner('in');
 }
 function startQRClockOut() {
+  // Keep a location already captured in the pop-up; otherwise start fresh
+  const keep = (state.clockOutGps && state.clockOutGps.lat) ? state.clockOutGps : null;
   closeModal('modal-clockout-location');
+  state.clockOutGps = keep;
+  state.clockOutMethod = 'Standard';
   openQRScanner('out');
 }
 
@@ -3110,10 +3137,22 @@ function qrCompleteClockIn(code) {
 }
 
 function qrCompleteClockOut(code) {
-  state.clockOutGps = qrGps ? { ...qrGps } : { lat: null, lng: null, accuracy: null, ts: new Date().toISOString() };
   state.clockOutMethod = 'QR';
   state.qrCode = code;
-  proceedToClockOutConfirm();
+  if (!(state.clockOutGps && state.clockOutGps.lat) && qrGps && qrGps.lat) state.clockOutGps = { ...qrGps };
+  if (state.clockOutGps && state.clockOutGps.lat) { proceedToClockOutConfirm(); return; }
+  // QR verified but no GPS yet — GPS is mandatory, so ask for it before finishing
+  const statusEl = document.getElementById('co-loc-status');
+  const captureBtn = document.getElementById('co-loc-btn');
+  const proceedBtn = document.getElementById('co-loc-proceed-btn');
+  const qrBtn = document.getElementById('co-qr-btn');
+  statusEl.style.color = 'var(--success)';
+  statusEl.textContent = '✓ QR code verified. Now capture your location to finish clocking out.';
+  captureBtn.style.display = ''; captureBtn.disabled = false; captureBtn.style.opacity = '1';
+  captureBtn.innerHTML = '<span>📍</span> Capture My Location Now';
+  proceedBtn.style.display = 'none';
+  if (qrBtn) qrBtn.style.display = 'none';
+  openModal('modal-clockout-location');
 }
 
 function qrStopCamera() {
@@ -3653,7 +3692,10 @@ function confirmClockOut() {
   const captureBtn = document.getElementById('co-loc-btn');
   if (statusEl) statusEl.textContent = 'Tap the button below to capture your current location.';
   if (proceedBtn) proceedBtn.style.display = 'none';
-  if (captureBtn) { captureBtn.style.opacity = '1'; captureBtn.disabled = false; captureBtn.innerHTML = '<span>📍</span> Capture My Location Now'; }
+  if (captureBtn) { captureBtn.style.display = ''; captureBtn.style.opacity = '1'; captureBtn.disabled = false; captureBtn.innerHTML = '<span>📍</span> Capture My Location Now'; }
+  const qrBtn = document.getElementById('co-qr-btn');
+  if (qrBtn) qrBtn.style.display = '';
+  if (statusEl) statusEl.style.color = 'var(--text-muted)';
   openModal('modal-clockout-location');
 }
 
@@ -3716,8 +3758,8 @@ function captureClockOutLocation() {
 }
 
 function proceedToClockOutConfirm() {
-  if (state.clockOutMethod !== 'QR' && (!state.clockOutGps || !state.clockOutGps.lat)) {
-    showToast('⚠️ Please capture your location or scan the QR code first.');
+  if (!state.clockOutGps || !state.clockOutGps.lat) {
+    showToast('⚠️ Please capture your location first — it\'s required to clock out.');
     return;
   }
   closeModal('modal-clockout-location');
@@ -3732,12 +3774,19 @@ function proceedToClockOutConfirm() {
     <div class="break-row"><span class="break-key">Total worked</span><span class="break-val">${secToHMS(Math.max(0,elapsed))}</span></div>
     <div class="break-row"><span class="break-key">Breaks taken</span><span class="break-val">${state.breaks.length + (state.onBreak ? 1 : 0)} (${secToMS(previewBreakSecs)})</span></div>
     <div class="break-row"><span class="break-key">Jobs completed</span><span class="break-val">${state.jobs.length}</span></div>
-    <div class="break-row"><span class="break-key">${state.clockOutMethod === 'QR' ? 'Verified by' : 'Clock-out GPS'}</span><span class="break-val" style="color:var(--success);font-size:11px;">${state.clockOutMethod === 'QR' ? '✓ QR scan' + (state.clockOutGps && state.clockOutGps.lat ? ' + GPS' : '') : '✓ Captured'}</span></div>
+    <div class="break-row"><span class="break-key">${state.clockOutMethod === 'QR' ? 'Verified by' : 'Clock-out GPS'}</span><span class="break-val" style="color:var(--success);font-size:11px;">${state.clockOutMethod === 'QR' ? '✓ QR scan + GPS' : '✓ Captured'}</span></div>
   `;
   openModal('modal-clockout');
 }
 
 function clockOut() {
+  if (!state.clockOutGps || !state.clockOutGps.lat) {
+    closeModal('modal-clockout');
+    showToast('⚠️ Capture your location before clocking out.');
+    if (state.clockOutMethod === 'QR') qrCompleteClockOut(state.qrCode); // keep the QR verification, just ask for GPS
+    else confirmClockOut();
+    return;
+  }
   // End any active break
   if (state.onBreak && state.currentBreakStart) {
     const breakEnd = new Date();
@@ -3850,6 +3899,7 @@ function resetApp() {
   document.getElementById('job-address').value = '';
   document.getElementById('loc-status').textContent = '';
   document.getElementById('btn-ci').disabled = true;
+  ciQrReadySince = null;
   checkReady();
   document.getElementById('sw-time').textContent = '00:00:00';
   setShiftDigits(0);
@@ -4581,9 +4631,9 @@ const APP_UPDATES = [
     title: 'Scan QR to Clock In & Out',
     isNew: true,
     features: [
-      { icon: '📷', text: 'Tap Scan QR to clock in and point your camera at the Employee Portal poster on site — no address needed', badge: true },
-      { icon: '🏁', text: 'Clocking out? Scan the same QR code instead of capturing your location', badge: true },
-      { icon: '🕘', text: 'Standard clock in and clock out still work exactly as before' },
+      { icon: '📷', text: 'Add your details and job address, then tap Scan QR to clock in and point your camera at the Employee Portal poster on site', badge: true },
+      { icon: '🏁', text: 'Clock out either way — Scan QR to clock out, or tap Clock out. Your GPS location is still required for both', badge: true },
+      { icon: '🕘', text: 'Standard Clock in unlocks a few seconds after the QR option, once your GPS is captured' },
     ]
   }
 ];
