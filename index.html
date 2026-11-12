@@ -2329,27 +2329,25 @@ let state = {
 let swInterval = null;
 
 // ══════════════════════════════════════════
-//  GEOFENCE — auto clock-in / clock-out at the depot
-//  • Inside 50 m (2 good GPS fixes, ≥10 s apart) on the
-//    clock-in / shift-complete screen → automatic clock-in.
-//  • Further than 100 m while the current job is the depot
-//    → automatic clock-out (with the GPS fix as clock-out GPS).
-//  • Once the employee adds a job at another site (+ Job),
-//    auto clock-out switches off for that job.
-//  • After any clock-out, auto clock-in stays off until the
-//    phone has been seen outside 100 m, or REARM_HOURS pass.
-//  For best accuracy paste the exact pin of Factory 2 into
-//  lat / lng (Google Maps → long-press the building → copy
-//  the numbers). If left null, the address is looked up once
-//  on the device and cached.
+//  GEOFENCE — auto clock-in / clock-out at listed sites
+//  • Inside a site's 50 m circle (2 good GPS fixes, ≥10 s apart)
+//    on the clock-in / shift-complete screen → automatic clock-in
+//    at that site (its address becomes the first job).
+//  • Further than 100 m from the site of the current job
+//    → automatic clock-out (the GPS fix is the clock-out GPS).
+//  • If the employee adds a job somewhere that isn't a listed
+//    site (+ Job), auto clock-out switches off for that job.
+//  • After a manual / 15h clock-out, auto clock-in stays off
+//    until the phone is seen outside 100 m, or rearmHours pass.
+//  • Only works while the app is open (web-app limitation).
+//
+//  TO ADD A SITE: copy one entry in GEOFENCE_SITES and change it.
+//  Exact pin: Google Maps → long-press the building → copy numbers.
+//  If lat/lng are null, the address is looked up once on the
+//  device and cached (less accurate — street level).
 // ══════════════════════════════════════════
 const GEOFENCE = {
   enabled: true,
-  label: 'Weddel Ct depot',
-  address: 'Factory 2/4 Weddel Ct, Laverton North VIC 3026',
-  geocodeQuery: '4 Weddel Court, Laverton North, Victoria 3026, Australia',
-  lat: null,            // e.g. -37.83xxxx  ← paste exact pin here
-  lng: null,            // e.g. 144.79xxxx  ← paste exact pin here
   enterRadius: 50,      // metres — auto clock-in
   exitRadius: 100,      // metres — auto clock-out
   maxAccuracy: 60,      // ignore fixes less accurate than ±60 m
@@ -2358,33 +2356,63 @@ const GEOFENCE = {
   pollMs: 15000,        // extra GPS check while the app is open
   rearmHours: 4
 };
-const GF_CENTRE_KEY = 'pi_geofence_centre';
-const GF_REARM_KEY  = 'pi_geofence_rearm';
-let gfWatchId = null, gfPollTimer = null, gfStreak = { kind: null, count: 0, since: 0 };
-let gfBusy = false, gfAutoFlag = false, gfGeocoding = false, gfHintShown = false;
 
-function gfCentre() {
-  if (GEOFENCE.lat != null && GEOFENCE.lng != null) return { lat: +GEOFENCE.lat, lng: +GEOFENCE.lng };
-  try {
-    const c = JSON.parse(localStorage.getItem(GF_CENTRE_KEY) || 'null');
-    if (c && c.q === GEOFENCE.geocodeQuery && isFinite(c.lat) && isFinite(c.lng)) return c;
-  } catch(e) {}
+const GEOFENCE_SITES = [
+  {
+    id: 'ampol-maltby',
+    label: 'Ampol Maltby Bypass',
+    address: 'Ampol Foodary Werribee, Maltby Bypass & Princes Hwy, Werribee VIC 3030',
+    // Centre of supplied boundary points:
+    //   50 m  → N -37.926801 · S -37.927699 · E 144.631649 · W 144.630511
+    //   100 m → N -37.926352 · S -37.928148 · E 144.632219 · W 144.629941
+    lat: -37.927250,
+    lng: 144.631080
+  },
+  {
+    id: 'weddel-depot',
+    label: 'Weddel Ct depot',
+    address: 'Factory 2/4 Weddel Ct, Laverton North VIC 3026',
+    geocodeQuery: '4 Weddel Court, Laverton North, Victoria 3026, Australia',
+    lat: null,          // ← paste exact pin of Factory 2 here
+    lng: null           // ← paste exact pin of Factory 2 here
+  }
+];
+
+const GF_CENTRE_KEY = 'pi_geofence_centres';
+const GF_REARM_KEY  = 'pi_geofence_rearm';
+let gfWatchId = null, gfPollTimer = null, gfStreak = { kind: null, site: null, count: 0, since: 0 };
+let gfBusy = false, gfAutoFlag = false, gfGeocoding = {}, gfHintShown = false;
+
+function gfCache() {
+  try { return JSON.parse(localStorage.getItem(GF_CENTRE_KEY) || '{}') || {}; } catch(e) { return {}; }
+}
+
+function gfCentre(site) {
+  if (site.lat != null && site.lng != null) return { lat: +site.lat, lng: +site.lng };
+  const c = gfCache()[site.id];
+  if (c && c.q === (site.geocodeQuery || site.address) && isFinite(c.lat) && isFinite(c.lng)) return c;
   return null;
 }
 
-function gfEnsureCentre() {
-  if (!GEOFENCE.enabled || gfCentre() || gfGeocoding) return;
-  gfGeocoding = true;
-  const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=au&q=' + encodeURIComponent(GEOFENCE.geocodeQuery);
-  fetch(url, { headers: { 'Accept-Language': 'en' } })
-    .then(r => r.json())
-    .then(arr => {
-      if (arr && arr[0]) {
-        try { localStorage.setItem(GF_CENTRE_KEY, JSON.stringify({ lat: +arr[0].lat, lng: +arr[0].lon, q: GEOFENCE.geocodeQuery })); } catch(e) {}
-      }
-    })
-    .catch(() => {})
-    .finally(() => { gfGeocoding = false; });
+function gfEnsureCentres() {
+  if (!GEOFENCE.enabled) return;
+  GEOFENCE_SITES.forEach(site => {
+    if (gfCentre(site) || gfGeocoding[site.id]) return;
+    gfGeocoding[site.id] = true;
+    const q = site.geocodeQuery || site.address;
+    fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=au&q=' + encodeURIComponent(q),
+          { headers: { 'Accept-Language': 'en' } })
+      .then(r => r.json())
+      .then(arr => {
+        if (arr && arr[0]) {
+          const cache = gfCache();
+          cache[site.id] = { lat: +arr[0].lat, lng: +arr[0].lon, q };
+          try { localStorage.setItem(GF_CENTRE_KEY, JSON.stringify(cache)); } catch(e) {}
+        }
+      })
+      .catch(() => {})
+      .finally(() => { gfGeocoding[site.id] = false; });
+  });
 }
 
 function gfDistance(lat1, lng1, lat2, lng2) {
@@ -2392,6 +2420,18 @@ function gfDistance(lat1, lng1, lat2, lng2) {
   const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
   const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
   return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+// Closest listed site to a point → { site, d } (or null if no site has a centre yet)
+function gfNearest(lat, lng) {
+  let best = null;
+  GEOFENCE_SITES.forEach(site => {
+    const c = gfCentre(site);
+    if (!c) return;
+    const d = gfDistance(lat, lng, c.lat, c.lng);
+    if (!best || d < best.d) best = { site, d };
+  });
+  return best;
 }
 
 function gfRearmPending() {
@@ -2403,22 +2443,23 @@ function gfRearmPending() {
 function gfSetRearm()   { try { localStorage.setItem(GF_REARM_KEY, String(Date.now())); } catch(e) {} }
 function gfClearRearm() { try { localStorage.removeItem(GF_REARM_KEY); } catch(e) {} }
 
-// Is the job the employee is currently on the depot?
-function gfActiveJobAtSite() {
-  const c = gfCentre();
+// Which listed site (if any) is the employee's current job at?
+function gfActiveJobSite() {
   const jobs = state.jobs || [];
   const job = jobs.find(j => j.active) || jobs[jobs.length - 1];
-  if (!c || !job || !job.gps || job.gps.lat == null) return false;
-  return gfDistance(+job.gps.lat, +job.gps.lng, c.lat, c.lng) <= GEOFENCE.exitRadius;
+  if (!job || !job.gps || job.gps.lat == null) return null;
+  const n = gfNearest(+job.gps.lat, +job.gps.lng);
+  return n && n.d <= GEOFENCE.exitRadius ? n.site : null;
 }
+function gfActiveJobAtSite() { return !!gfActiveJobSite(); }
 
-function gfConfirm(kind) {
+function gfConfirm(kind, siteId) {
   const now = Date.now();
-  if (gfStreak.kind !== kind) gfStreak = { kind, count: 0, since: now };
+  if (gfStreak.kind !== kind || gfStreak.site !== siteId) gfStreak = { kind, site: siteId, count: 0, since: now };
   gfStreak.count++;
   return gfStreak.count >= GEOFENCE.confirmReadings && (now - gfStreak.since) >= GEOFENCE.confirmMs;
 }
-function gfResetStreak() { gfStreak = { kind: null, count: 0, since: 0 }; }
+function gfResetStreak() { gfStreak = { kind: null, site: null, count: 0, since: 0 }; }
 
 function gfSetStatus(text) {
   const el = document.getElementById('gf-status');
@@ -2435,39 +2476,44 @@ function gfScreen() {
 
 function gfOnPosition(pos) {
   if (!GEOFENCE.enabled || gfBusy) return;
-  const c = gfCentre();
-  if (!c) { gfEnsureCentre(); return; }
+  gfEnsureCentres();
   const lat = pos.coords.latitude, lng = pos.coords.longitude, acc = pos.coords.accuracy || 9999;
-  const d = gfDistance(lat, lng, c.lat, c.lng);
-  const inside  = d <= GEOFENCE.enterRadius && acc <= GEOFENCE.maxAccuracy;
-  // Clearly outside: good fix beyond 100 m, or even a rough fix whose error circle is still beyond 100 m
-  const outside = d > GEOFENCE.exitRadius && (acc <= GEOFENCE.maxAccuracy || (d - acc) > GEOFENCE.exitRadius);
+  const good = acc <= GEOFENCE.maxAccuracy;
+  const screen = gfScreen();
 
-  if (gfScreen() === 'clockin' || gfScreen() === 'clockedout') {
+  if (screen === 'clockin' || screen === 'clockedout') {
+    const n = gfNearest(lat, lng);
+    if (!n) return;
+    const inside  = n.d <= GEOFENCE.enterRadius && good;
+    const outside = n.d > GEOFENCE.exitRadius && (good || (n.d - acc) > GEOFENCE.exitRadius);
     if (outside) gfClearRearm();
-    if (gfScreen() === 'clockin') {
-      gfSetStatus(inside ? `At the ${GEOFENCE.label} — clocking you in…`
-                         : `Auto clock-in at the ${GEOFENCE.label} · ${Math.round(d)} m away`);
+    if (screen === 'clockin') {
+      gfSetStatus(inside ? `At ${n.site.label} — clocking you in…`
+                         : `Auto clock-in at ${n.site.label} · ${n.d >= 1000 ? (n.d / 1000).toFixed(1) + ' km' : Math.round(n.d) + ' m'} away`);
     }
     if (!inside || gfRearmPending()) { if (!inside) gfResetStreak(); return; }
-    if (gfConfirm('in')) { gfResetStreak(); gfAutoClockIn(pos); }
+    if (gfConfirm('in', n.site.id)) { gfResetStreak(); gfAutoClockIn(pos, n.site); }
     return;
   }
 
-  if (gfScreen() === 'working') {
-    if (state.onBreak || !gfActiveJobAtSite()) { gfResetStreak(); return; }
+  if (screen === 'working') {
+    const site = state.onBreak ? null : gfActiveJobSite();
+    if (!site) { gfResetStreak(); return; }
+    const c = gfCentre(site);
+    const d = gfDistance(lat, lng, c.lat, c.lng);
+    const outside = d > GEOFENCE.exitRadius && (good || (d - acc) > GEOFENCE.exitRadius);
     if (!outside) { gfResetStreak(); return; }
-    if (gfConfirm('out')) { gfResetStreak(); gfAutoClockOut(pos); }
+    if (gfConfirm('out', site.id)) { gfResetStreak(); gfAutoClockOut(pos, site); }
   }
 }
 
-function gfAutoClockIn(pos) {
+function gfAutoClockIn(pos, site) {
   const creds = state._savedCreds || loadCredentials();
   const name = creds ? creds.name : (document.getElementById('emp-name').value || '').trim();
   const id   = creds ? creds.id   : (document.getElementById('emp-id').value || '').trim();
   if (!name || !id) {
-    if (gfScreen() === 'clockin') gfSetStatus(`You're at the ${GEOFENCE.label} — enter your name and Employee ID and you'll be clocked in automatically.`);
-    if (!gfHintShown) { gfHintShown = true; showToast('📍 At the depot — enter your name & ID'); }
+    if (gfScreen() === 'clockin') gfSetStatus(`You're at ${site.label} — enter your name and Employee ID and you'll be clocked in automatically.`);
+    if (!gfHintShown) { gfHintShown = true; showToast('📍 At ' + site.label + ' — enter your name & ID'); }
     return;
   }
   gfBusy = true;
@@ -2479,11 +2525,11 @@ function gfAutoClockIn(pos) {
     }
     state.gps.lat = pos.coords.latitude.toFixed(6);
     state.gps.lng = pos.coords.longitude.toFixed(6);
-    document.getElementById('job-address').value = GEOFENCE.address;
+    document.getElementById('job-address').value = site.address;
     checkReady();
     gfAutoFlag = true;
     clockIn();
-    showToast(`📍 Auto clocked in at the ${GEOFENCE.label}`);
+    showToast(`📍 Auto clocked in at ${site.label}`);
   } finally {
     gfAutoFlag = false;
     gfBusy = false;
@@ -2491,7 +2537,7 @@ function gfAutoClockIn(pos) {
   }
 }
 
-function gfAutoClockOut(pos) {
+function gfAutoClockOut(pos, site) {
   gfBusy = true;
   try {
     ['modal-clockout-location', 'modal-clockout', 'modal-job', 'modal-report', 'modal-forceclose-reminder']
@@ -2504,7 +2550,7 @@ function gfAutoClockOut(pos) {
     };
     gfAutoFlag = true;
     clockOut();
-    showToast(`📍 Auto clocked out — you left the ${GEOFENCE.label}`);
+    showToast(`📍 Auto clocked out — you left ${site.label}`);
   } finally {
     gfAutoFlag = false;
     gfBusy = false;
@@ -2526,13 +2572,14 @@ function gfStop() {
 
 // Start/stop monitoring to match the current screen
 function gfSync() {
+  const screen = gfScreen();
   const want = GEOFENCE.enabled && !!navigator.geolocation && (
-    gfScreen() === 'clockin' || gfScreen() === 'clockedout' ||
-    (gfScreen() === 'working' && !state.onBreak && gfActiveJobAtSite())
+    screen === 'clockin' || screen === 'clockedout' ||
+    (screen === 'working' && !state.onBreak && gfActiveJobAtSite())
   );
-  if (gfScreen() !== 'clockin') gfSetStatus('');
+  if (screen !== 'clockin') gfSetStatus('');
   if (!want) { gfStop(); return; }
-  gfEnsureCentre();
+  gfEnsureCentres();
   if (gfWatchId === null) {
     gfWatchId = navigator.geolocation.watchPosition(gfOnPosition, () => {},
       { enableHighAccuracy: true, timeout: 20000, maximumAge: 5000 });
