@@ -1360,6 +1360,27 @@
 
   /* Toast */
   #toast { font-family: 'IBM Plex Sans', sans-serif; }
+  /* ═══ v2.1.2 — mandatory location ═══ */
+  .qr-sub { font-size: 14px; color: #a3acc2; margin-bottom: 18px; }
+  .loc-gate { position: fixed; inset: 0; z-index: 9990; background: rgba(5,9,20,0.92); display: flex; align-items: center; justify-content: center; padding: 24px; backdrop-filter: blur(6px); }
+  .loc-gate[hidden] { display: none; }
+  .loc-gate-card { width: 100%; max-width: 380px; background: #121c36; border: 1px solid #2a375c; border-radius: 24px; padding: 28px 24px 22px; text-align: center; font-family: 'IBM Plex Sans', sans-serif; }
+  .loc-gate-icon { width: 60px; height: 60px; border-radius: 30px; background: rgba(216,182,90,0.12); color: #d8b65a; display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; }
+  .loc-gate-title { font-size: 21px; font-weight: 600; color: #eef1f7; letter-spacing: -0.3px; margin-bottom: 8px; }
+  .loc-gate-text { font-size: 14px; color: #a3acc2; line-height: 1.55; margin-bottom: 18px; }
+  .loc-gate-status { min-height: 22px; font-size: 14px; color: #a3acc2; display: flex; align-items: center; justify-content: center; gap: 10px; line-height: 1.5; }
+  .loc-gate-status.error { color: #ff9b98; }
+  .loc-gate-status.ok { color: #6fd6c8; }
+  .loc-spin { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #2a375c; border-top-color: #d8b65a; animation: locSpin 0.8s linear infinite; flex-shrink: 0; }
+  .loc-gate-status.error .loc-spin, .loc-gate-status.ok .loc-spin { display: none; }
+  @keyframes locSpin { to { transform: rotate(360deg); } }
+  .loc-gate-btn { width: 100%; min-height: 52px; margin-top: 18px; border: none; border-radius: 14px; background: #d8b65a; color: #1a1606; font-family: inherit; font-size: 15px; font-weight: 600; cursor: pointer; }
+  .loc-gate-cancel { width: 100%; min-height: 48px; margin-top: 10px; border: 1px solid #2a375c; border-radius: 14px; background: transparent; color: #eef1f7; font-family: inherit; font-size: 15px; cursor: pointer; }
+  .loc-gate-btn[hidden], .loc-gate-cancel[hidden] { display: none; }
+  /* ═══ v2.1.3 — site name from GPS ═══ */
+  .ci2-site[readonly] { background: transparent; border-style: dashed; color: #eef1f7; font-weight: 500; cursor: default; pointer-events: none; }
+  .ci2-site.filled { border-style: solid; background: #16213f; }
+  .ci2-site.finding { color: #a3acc2; font-weight: 400; }
 </style>
 </head>
 <body>
@@ -1448,7 +1469,7 @@
 
   <div class="ci2-scroll">
     <h1 class="ci2-greet">Good <span id="greeting-time">morning</span><span id="ci-greet-name"></span></h1>
-    <p class="ci2-lead">Three quick steps and you're on the clock.</p>
+    <p class="ci2-lead">Capture your location and you're ready to clock in.</p>
 
     <!-- Returning employee (shown when credentials are saved) -->
     <div id="returning-banner" class="ci2-who" style="display:none;">
@@ -1469,24 +1490,24 @@
     </div>
 
     <div class="ci2-steps">
-      <div class="ci2-step" id="step-addr">
+      <div class="ci2-step" id="step-gps">
         <div class="ci2-rail"><span class="ci2-num">1</span><span class="ci2-line"></span></div>
         <div class="ci2-step-body">
-          <label class="ci2-step-title" for="job-address">First job address</label>
-          <input class="ci2-input" type="text" id="job-address" placeholder="e.g. 12 Collins St, Melbourne">
-        </div>
-      </div>
-      <div class="ci2-step" id="step-gps">
-        <div class="ci2-rail"><span class="ci2-num">2</span><span class="ci2-line"></span></div>
-        <div class="ci2-step-body">
-          <div class="ci2-step-title">Confirm your location</div>
+          <div class="ci2-step-title">Capture your location</div>
           <button class="ci2-gps-btn" onclick="getLocation()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
             Capture GPS
           </button>
           <div class="loc-status" id="loc-status"></div>
           <div class="ci2-muted ci2-small">Only clock in once you've arrived at your first site.</div>
-          <div class="ci2-small" id="gf-status" style="color:var(--c-ok);"></div>
+        </div>
+      </div>
+      <div class="ci2-step" id="step-addr">
+        <div class="ci2-rail"><span class="ci2-num">2</span><span class="ci2-line"></span></div>
+        <div class="ci2-step-body">
+          <label class="ci2-step-title" for="job-address">Site</label>
+          <input class="ci2-input ci2-site" type="text" id="job-address" readonly tabindex="-1" aria-readonly="true" placeholder="Filled in automatically from your GPS">
+          <div class="ci2-muted ci2-small" id="site-street"></div>
         </div>
       </div>
       <div class="ci2-step" id="step-shift">
@@ -1507,8 +1528,8 @@
   </div>
 
   <div class="ci2-footer">
-    <button class="ci2-btn" id="btn-ci" onclick="clockIn()" disabled>Clock in</button>
-    <div class="ci2-version">Employee Portal · v2.0.1</div>
+    <button class="ci2-btn" id="btn-ci" onclick="beginClockIn()" disabled>Clock in</button>
+    <div class="ci2-version">Employee Portal · v2.2.0</div>
   </div>
 </div>
 
@@ -1717,10 +1738,20 @@
       Are you sure you want to end your shift? Your data will be recorded to Google Sheets.
     </p>
     <div class="break-summary" id="co-preview"></div>
-    <button class="modal-btn" onclick="clockOut()" style="background:var(--danger);color:white;">
-      Yes, Clock Out
-    </button>
+    <button class="modal-btn" onclick="clockOut()" style="background:var(--danger);color:white;">Yes, clock out</button>
     <button class="modal-cancel" onclick="closeModal('modal-clockout')">Keep Working</button>
+  </div>
+</div>
+
+<!-- LOCATION GATE — location is mandatory on open, clock-in and clock-out -->
+<div id="loc-gate" class="loc-gate" hidden>
+  <div class="loc-gate-card" role="dialog" aria-modal="true" aria-labelledby="loc-gate-title">
+    <div class="loc-gate-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg></div>
+    <div class="loc-gate-title" id="loc-gate-title">Confirming your location</div>
+    <div class="loc-gate-text" id="loc-gate-text">Employee Portal records your location every time you open the app.</div>
+    <div class="loc-gate-status" id="loc-gate-status" role="status" aria-live="polite"><span class="loc-spin"></span>Getting your location…</div>
+    <button class="loc-gate-btn" id="loc-gate-retry" onclick="locGateRetry()" hidden>Try again</button>
+    <button class="loc-gate-cancel" id="loc-gate-cancel" onclick="locGateCancel()" hidden>Cancel</button>
   </div>
 </div>
 
@@ -1842,7 +1873,7 @@
       <div class="menu-header-emblem"><svg class="ep-logo" width="38" height="38" viewBox="0 0 38 38" role="img" aria-label="Employee Portal logo"><rect width="38" height="38" rx="9.0" fill="#16213f"/><svg x="5.4" y="5.4" width="27.1" height="27.1" viewBox="0 0 180 180"><path d="M90 40 A50 50 0 1 1 46.7 65" fill="none" stroke="#d8b65a" stroke-width="16" stroke-linecap="round"/><circle cx="90" cy="90" r="11" fill="#eef1f7"/></svg></svg></div>
       <div>
         <div class="menu-header-title">Employee Portal</div>
-        <div class="menu-header-sub">v2.0.1</div>
+        <div class="menu-header-sub">v2.2.0</div>
       </div>
     </div>
     <div class="menu-employee-chip" id="menu-employee-chip" style="display:none;">
@@ -1889,7 +1920,7 @@
       <span>App Guide</span>
     </div>
   </div>
-  <div class="menu-footer">Employee Portal © 2025<br><span style="font-size:10px;color:rgba(163,172,194,0.5);letter-spacing:0.5px;">Current version v2.0.1</span></div>
+  <div class="menu-footer">Employee Portal © 2025<br><span style="font-size:10px;color:rgba(163,172,194,0.5);letter-spacing:0.5px;">Current version v2.2.0</span></div>
 </div>
 
 <!-- JOBS FOR THE DAY MODAL -->
@@ -2329,269 +2360,6 @@ let state = {
 let swInterval = null;
 
 // ══════════════════════════════════════════
-//  GEOFENCE — auto clock-in / clock-out at listed sites
-//  • Inside a site's 50 m circle (2 good GPS fixes, ≥10 s apart)
-//    on the clock-in / shift-complete screen → automatic clock-in
-//    at that site (its address becomes the first job).
-//  • Further than 100 m from the site of the current job
-//    → automatic clock-out (the GPS fix is the clock-out GPS).
-//  • If the employee adds a job somewhere that isn't a listed
-//    site (+ Job), auto clock-out switches off for that job.
-//  • After a manual / 15h clock-out, auto clock-in stays off
-//    until the phone is seen outside 100 m, or rearmHours pass.
-//  • Only works while the app is open (web-app limitation).
-//
-//  TO ADD A SITE: copy one entry in GEOFENCE_SITES and change it.
-//  Exact pin: Google Maps → long-press the building → copy numbers.
-//  If lat/lng are null, the address is looked up once on the
-//  device and cached (less accurate — street level).
-// ══════════════════════════════════════════
-const GEOFENCE = {
-  enabled: true,
-  enterRadius: 50,      // metres — auto clock-in
-  exitRadius: 100,      // metres — auto clock-out
-  maxAccuracy: 60,      // ignore fixes less accurate than ±60 m
-  confirmReadings: 2,   // consecutive fixes needed before acting
-  confirmMs: 10000,     // ...spread over at least this long
-  pollMs: 15000,        // extra GPS check while the app is open
-  rearmHours: 4
-};
-
-const GEOFENCE_SITES = [
-  {
-    id: 'ampol-maltby',
-    label: 'Ampol Maltby Bypass',
-    address: 'Ampol Foodary Werribee, Maltby Bypass & Princes Hwy, Werribee VIC 3030',
-    // Centre of supplied boundary points:
-    //   50 m  → N -37.926801 · S -37.927699 · E 144.631649 · W 144.630511
-    //   100 m → N -37.926352 · S -37.928148 · E 144.632219 · W 144.629941
-    lat: -37.927250,
-    lng: 144.631080
-  },
-  {
-    id: 'weddel-depot',
-    label: 'Weddel Ct depot',
-    address: 'Factory 2/4 Weddel Ct, Laverton North VIC 3026',
-    geocodeQuery: '4 Weddel Court, Laverton North, Victoria 3026, Australia',
-    lat: null,          // ← paste exact pin of Factory 2 here
-    lng: null           // ← paste exact pin of Factory 2 here
-  }
-];
-
-const GF_CENTRE_KEY = 'pi_geofence_centres';
-const GF_REARM_KEY  = 'pi_geofence_rearm';
-let gfWatchId = null, gfPollTimer = null, gfStreak = { kind: null, site: null, count: 0, since: 0 };
-let gfBusy = false, gfAutoFlag = false, gfGeocoding = {}, gfHintShown = false;
-
-function gfCache() {
-  try { return JSON.parse(localStorage.getItem(GF_CENTRE_KEY) || '{}') || {}; } catch(e) { return {}; }
-}
-
-function gfCentre(site) {
-  if (site.lat != null && site.lng != null) return { lat: +site.lat, lng: +site.lng };
-  const c = gfCache()[site.id];
-  if (c && c.q === (site.geocodeQuery || site.address) && isFinite(c.lat) && isFinite(c.lng)) return c;
-  return null;
-}
-
-function gfEnsureCentres() {
-  if (!GEOFENCE.enabled) return;
-  GEOFENCE_SITES.forEach(site => {
-    if (gfCentre(site) || gfGeocoding[site.id]) return;
-    gfGeocoding[site.id] = true;
-    const q = site.geocodeQuery || site.address;
-    fetch('https://nominatim.openstreetmap.org/search?format=json&limit=1&countrycodes=au&q=' + encodeURIComponent(q),
-          { headers: { 'Accept-Language': 'en' } })
-      .then(r => r.json())
-      .then(arr => {
-        if (arr && arr[0]) {
-          const cache = gfCache();
-          cache[site.id] = { lat: +arr[0].lat, lng: +arr[0].lon, q };
-          try { localStorage.setItem(GF_CENTRE_KEY, JSON.stringify(cache)); } catch(e) {}
-        }
-      })
-      .catch(() => {})
-      .finally(() => { gfGeocoding[site.id] = false; });
-  });
-}
-
-function gfDistance(lat1, lng1, lat2, lng2) {
-  const R = 6371000, toRad = x => x * Math.PI / 180;
-  const dLat = toRad(lat2 - lat1), dLng = toRad(lng2 - lng1);
-  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLng / 2) ** 2;
-  return 2 * R * Math.asin(Math.sqrt(a));
-}
-
-// Closest listed site to a point → { site, d } (or null if no site has a centre yet)
-function gfNearest(lat, lng) {
-  let best = null;
-  GEOFENCE_SITES.forEach(site => {
-    const c = gfCentre(site);
-    if (!c) return;
-    const d = gfDistance(lat, lng, c.lat, c.lng);
-    if (!best || d < best.d) best = { site, d };
-  });
-  return best;
-}
-
-function gfRearmPending() {
-  try {
-    const t = parseInt(localStorage.getItem(GF_REARM_KEY) || '0', 10);
-    return t > 0 && (Date.now() - t) < GEOFENCE.rearmHours * 3600000;
-  } catch(e) { return false; }
-}
-function gfSetRearm()   { try { localStorage.setItem(GF_REARM_KEY, String(Date.now())); } catch(e) {} }
-function gfClearRearm() { try { localStorage.removeItem(GF_REARM_KEY); } catch(e) {} }
-
-// Which listed site (if any) is the employee's current job at?
-function gfActiveJobSite() {
-  const jobs = state.jobs || [];
-  const job = jobs.find(j => j.active) || jobs[jobs.length - 1];
-  if (!job || !job.gps || job.gps.lat == null) return null;
-  const n = gfNearest(+job.gps.lat, +job.gps.lng);
-  return n && n.d <= GEOFENCE.exitRadius ? n.site : null;
-}
-function gfActiveJobAtSite() { return !!gfActiveJobSite(); }
-
-function gfConfirm(kind, siteId) {
-  const now = Date.now();
-  if (gfStreak.kind !== kind || gfStreak.site !== siteId) gfStreak = { kind, site: siteId, count: 0, since: now };
-  gfStreak.count++;
-  return gfStreak.count >= GEOFENCE.confirmReadings && (now - gfStreak.since) >= GEOFENCE.confirmMs;
-}
-function gfResetStreak() { gfStreak = { kind: null, site: null, count: 0, since: 0 }; }
-
-function gfSetStatus(text) {
-  const el = document.getElementById('gf-status');
-  if (el) el.textContent = text || '';
-}
-
-// The screen actually showing (state.screen defaults to 'clockin' while splash / T&C are up)
-function gfScreen() {
-  const tnc = document.getElementById('modal-tnc');
-  if (tnc && !tnc.classList.contains('hidden') && tnc.style.display !== 'none') return 'splash';
-  const el = document.querySelector('.screen.active');
-  return el ? el.id : 'splash';
-}
-
-function gfOnPosition(pos) {
-  if (!GEOFENCE.enabled || gfBusy) return;
-  gfEnsureCentres();
-  const lat = pos.coords.latitude, lng = pos.coords.longitude, acc = pos.coords.accuracy || 9999;
-  const good = acc <= GEOFENCE.maxAccuracy;
-  const screen = gfScreen();
-
-  if (screen === 'clockin' || screen === 'clockedout') {
-    const n = gfNearest(lat, lng);
-    if (!n) return;
-    const inside  = n.d <= GEOFENCE.enterRadius && good;
-    const outside = n.d > GEOFENCE.exitRadius && (good || (n.d - acc) > GEOFENCE.exitRadius);
-    if (outside) gfClearRearm();
-    if (screen === 'clockin') {
-      gfSetStatus(inside ? `At ${n.site.label} — clocking you in…`
-                         : `Auto clock-in at ${n.site.label} · ${n.d >= 1000 ? (n.d / 1000).toFixed(1) + ' km' : Math.round(n.d) + ' m'} away`);
-    }
-    if (!inside || gfRearmPending()) { if (!inside) gfResetStreak(); return; }
-    if (gfConfirm('in', n.site.id)) { gfResetStreak(); gfAutoClockIn(pos, n.site); }
-    return;
-  }
-
-  if (screen === 'working') {
-    const site = state.onBreak ? null : gfActiveJobSite();
-    if (!site) { gfResetStreak(); return; }
-    const c = gfCentre(site);
-    const d = gfDistance(lat, lng, c.lat, c.lng);
-    const outside = d > GEOFENCE.exitRadius && (good || (d - acc) > GEOFENCE.exitRadius);
-    if (!outside) { gfResetStreak(); return; }
-    if (gfConfirm('out', site.id)) { gfResetStreak(); gfAutoClockOut(pos, site); }
-  }
-}
-
-function gfAutoClockIn(pos, site) {
-  const creds = state._savedCreds || loadCredentials();
-  const name = creds ? creds.name : (document.getElementById('emp-name').value || '').trim();
-  const id   = creds ? creds.id   : (document.getElementById('emp-id').value || '').trim();
-  if (!name || !id) {
-    if (gfScreen() === 'clockin') gfSetStatus(`You're at ${site.label} — enter your name and Employee ID and you'll be clocked in automatically.`);
-    if (!gfHintShown) { gfHintShown = true; showToast('📍 At ' + site.label + ' — enter your name & ID'); }
-    return;
-  }
-  gfBusy = true;
-  try {
-    if (gfScreen() === 'clockedout') resetApp();
-    if (!creds) {
-      document.getElementById('emp-name').value = name;
-      document.getElementById('emp-id').value = id;
-    }
-    state.gps.lat = pos.coords.latitude.toFixed(6);
-    state.gps.lng = pos.coords.longitude.toFixed(6);
-    document.getElementById('job-address').value = site.address;
-    checkReady();
-    gfAutoFlag = true;
-    clockIn();
-    showToast(`📍 Auto clocked in at ${site.label}`);
-  } finally {
-    gfAutoFlag = false;
-    gfBusy = false;
-    gfSync();
-  }
-}
-
-function gfAutoClockOut(pos, site) {
-  gfBusy = true;
-  try {
-    ['modal-clockout-location', 'modal-clockout', 'modal-job', 'modal-report', 'modal-forceclose-reminder']
-      .forEach(id => { const m = document.getElementById(id); if (m) m.classList.remove('open'); });
-    state.clockOutGps = {
-      lat: pos.coords.latitude.toFixed(6),
-      lng: pos.coords.longitude.toFixed(6),
-      accuracy: Math.round(pos.coords.accuracy),
-      ts: new Date().toISOString()
-    };
-    gfAutoFlag = true;
-    clockOut();
-    showToast(`📍 Auto clocked out — you left ${site.label}`);
-  } finally {
-    gfAutoFlag = false;
-    gfBusy = false;
-    gfSync();
-  }
-}
-
-function gfPollOnce() {
-  if (!navigator.geolocation || document.visibilityState === 'hidden') return;
-  navigator.geolocation.getCurrentPosition(gfOnPosition, () => {},
-    { enableHighAccuracy: true, timeout: 12000, maximumAge: 5000 });
-}
-
-function gfStop() {
-  if (gfWatchId !== null) { navigator.geolocation.clearWatch(gfWatchId); gfWatchId = null; }
-  if (gfPollTimer) { clearInterval(gfPollTimer); gfPollTimer = null; }
-  gfResetStreak();
-}
-
-// Start/stop monitoring to match the current screen
-function gfSync() {
-  const screen = gfScreen();
-  const want = GEOFENCE.enabled && !!navigator.geolocation && (
-    screen === 'clockin' || screen === 'clockedout' ||
-    (screen === 'working' && !state.onBreak && gfActiveJobAtSite())
-  );
-  if (screen !== 'clockin') gfSetStatus('');
-  if (!want) { gfStop(); return; }
-  gfEnsureCentres();
-  if (gfWatchId === null) {
-    gfWatchId = navigator.geolocation.watchPosition(gfOnPosition, () => {},
-      { enableHighAccuracy: true, timeout: 20000, maximumAge: 5000 });
-  }
-  if (!gfPollTimer) gfPollTimer = setInterval(gfPollOnce, GEOFENCE.pollMs);
-}
-
-document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'visible') { gfSync(); gfPollOnce(); }
-});
-
-// ══════════════════════════════════════════
 //  INIT — restore from localStorage
 // ══════════════════════════════════════════
 function init() {
@@ -2679,10 +2447,6 @@ function switchScreen(id) {
   document.getElementById(id).classList.add('active');
   state.screen = id;
   saveState();
-  // After a manual / 15h clock-out, don't auto clock back in until they've left the site.
-  // (A geofence clock-out already proves they've left, so it doesn't block.)
-  if (id === 'clockedout' && !gfAutoFlag) gfSetRearm();
-  gfSync();
 }
 
 // ══════════════════════════════════════════
@@ -2737,11 +2501,8 @@ function getLocation() {
     state.gps.lat = pos.coords.latitude.toFixed(6);
     state.gps.lng = pos.coords.longitude.toFixed(6);
     st.className = 'loc-status';
-    st.textContent = `✓ GPS captured — resolving address…`;
-    checkReady();
-    reverseGeocode(state.gps.lat, state.gps.lng, addr => {
-      st.textContent = addr ? `✓ ${addr}` : `✓ GPS: ${state.gps.lat}, ${state.gps.lng}`;
-    });
+    st.textContent = '✓ GPS captured — finding your site…';
+    fillSiteFromGps(state.gps.lat, state.gps.lng, st);
   }
   function onFail(err) {
     st.className = 'loc-status error';
@@ -3198,12 +2959,17 @@ function breakEndChime() {
 //  CLOCK IN
 // ══════════════════════════════════════════
 function clockIn() {
+  if (state.clockInTime && state.screen === 'working') return;
+  if (!state.clockInFix || Date.now() - new Date(state.clockInFix.ts).getTime() > 120000) { beginClockIn(); return; }
+  const clockInMethod = 'Button';
+  state.gps.lat = state.clockInFix.lat; state.gps.lng = state.clockInFix.lng;
   // Use saved creds or form values
   const creds = state._savedCreds;
   state.employee.name = creds ? creds.name : document.getElementById('emp-name').value.trim();
   state.employee.id   = creds ? creds.id   : document.getElementById('emp-id').value.trim();
   state.employee.shift = document.getElementById('shift-type').value;
   state.clockInTime = new Date();
+  state.shiftId = 'S' + Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
   state.breaks = [];
   state.totalBreakSecs = 0;
   state.onBreak = false;
@@ -3214,7 +2980,7 @@ function clockIn() {
   // Save credentials for 1 year
   saveCredentials(state.employee.name, state.employee.id);
 
-  const addr = document.getElementById('job-address').value.trim();
+  const addr = (state.site && state.site.name) || document.getElementById('job-address').value.trim();
   state.jobs = [{
     address: addr,
     gps: { lat: state.gps.lat, lng: state.gps.lng },
@@ -3248,9 +3014,15 @@ function clockIn() {
     lat: state.gps.lat,
     lng: state.gps.lng,
     date: dateStr(state.clockInTime),
-    autoClockIn: gfAutoFlag,
-    autoReason: gfAutoFlag ? 'geofence' : ''
+    accuracy: state.clockInFix.accuracy,
+    siteName: state.site ? state.site.name : addr,
+    siteStreet: state.site ? state.site.street : '',
+    siteSource: state.site ? state.site.source : 'typed',
+    clockInMethod: clockInMethod,
+    shiftId: state.shiftId
   });
+  state.clockInFix = null;
+  saveState();
 }
 
 // ══════════════════════════════════════════
@@ -3340,7 +3112,12 @@ function performAutoClockOut() {
     breaks: state.breaks.length,
     jobs: state.jobs.length,
     date: dateStr(clockOutTime),
-    autoClockOut: true
+    autoClockOut: true,
+    clockOutLat: state.liveGps ? state.liveGps.lat : null,
+    clockOutLng: state.liveGps ? state.liveGps.lng : null,
+    clockOutGpsAccuracy: state.liveGps ? state.liveGps.accuracy : null,
+    clockOutGpsNote: 'Last known location (auto clock-out)',
+    shiftId: state.shiftId || ''
   });
 
   document.getElementById('co-name').textContent = state.employee.name;
@@ -3533,7 +3310,6 @@ function updateBreakUI() {
     btn.textContent = 'Take break';
   }
   renderJobs();
-  gfSync();
 }
 
 function renderBreakHistory() {
@@ -3717,6 +3493,7 @@ function confirmClockOut() {
   if (proceedBtn) proceedBtn.style.display = 'none';
   if (captureBtn) { captureBtn.style.opacity = '1'; captureBtn.disabled = false; captureBtn.innerHTML = '<span>📍</span> Capture My Location Now'; }
   openModal('modal-clockout-location');
+  setTimeout(captureClockOutLocation, 150);
 }
 
 function captureClockOutLocation() {
@@ -3800,6 +3577,8 @@ function proceedToClockOutConfirm() {
 }
 
 function clockOut() {
+  if (!state.clockInTime || state.screen !== 'working') return;
+  if (!state.clockOutGps || !state.clockOutGps.lat || Date.now() - new Date(state.clockOutGps.ts).getTime() > 180000) { closeModal('modal-clockout'); confirmClockOut(); return; }
   // End any active break
   if (state.onBreak && state.currentBreakStart) {
     const breakEnd = new Date();
@@ -3849,11 +3628,12 @@ function clockOut() {
     breakDetails: state.breaks,
     jobs: state.jobs.length,
     date: dateStr(clockOutTime),
-    autoClockOut: gfAutoFlag,
-    autoReason: gfAutoFlag ? 'geofence' : '',
+    autoClockOut: false,
     clockOutLat: state.clockOutGps ? state.clockOutGps.lat : null,
     clockOutLng: state.clockOutGps ? state.clockOutGps.lng : null,
-    clockOutGpsAccuracy: state.clockOutGps ? state.clockOutGps.accuracy : null
+    clockOutGpsAccuracy: state.clockOutGps ? state.clockOutGps.accuracy : null,
+    clockOutMethod: 'Button',
+    shiftId: state.shiftId || ''
   };
   sendToSheets('CLOCK_OUT', clockOutPayload);
 
@@ -3908,6 +3688,8 @@ function resetApp() {
   document.getElementById('emp-name').value = '';
   document.getElementById('emp-id').value = '';
   document.getElementById('job-address').value = '';
+  document.getElementById('job-address').className = 'ci2-input ci2-site';
+  document.getElementById('site-street').textContent = '';
   document.getElementById('loc-status').textContent = '';
   document.getElementById('btn-ci').disabled = true;
   checkReady();
@@ -3943,6 +3725,410 @@ function sendToSheets(eventType, data) {
     body: JSON.stringify(data)
   }).catch(e => console.warn('Sheets sync failed:', e));
 }
+
+// ══════════════════════════════════════════
+//  v2.1.2 — STRICT LOCATION
+//  Location is required (and sent to Google Sheets) when the app
+//  opens or comes back after 2+ minutes, at every clock-in and at
+//  every clock-out. The app stays locked until a fix is captured.
+// ══════════════════════════════════════════
+const RESUME_RECHECK_MS  = 2 * 60 * 1000;
+let locGateResolve = null, locGateReject = null, locGateMode = null, locGateBusy = false;
+let appHiddenAt = null;
+
+function whoAmI() {
+  if (state.employee && state.employee.name) return { name: state.employee.name, id: state.employee.id };
+  if (state._savedCreds) return { name: state._savedCreds.name, id: state._savedCreds.id };
+  try { const c = JSON.parse(localStorage.getItem(CRED_KEY) || 'null'); if (c) return { name: c.name, id: c.id }; } catch (e) {}
+  return { name: '', id: '' };
+}
+
+let fixInFlight = null;
+function getFix(opts) {
+  opts = opts || {};
+  // Reuse a very recent fix
+  if (opts.allowRecent && state.liveGps && state.liveGps.ts && Date.now() - new Date(state.liveGps.ts).getTime() < 30000) {
+    return Promise.resolve({ lat: state.liveGps.lat, lng: state.liveGps.lng, accuracy: state.liveGps.accuracy, ts: state.liveGps.ts });
+  }
+  if (fixInFlight) return fixInFlight;
+  fixInFlight = new Promise((resolve, reject) => {
+    if (!navigator.geolocation) { reject({ code: 0 }); return; }
+    let done = false;
+    const finish = (fn, v) => { if (done) return; done = true; clearTimeout(hard); fn(v); };
+    const hard = setTimeout(() => finish(reject, { code: 3 }), 30000);
+    const ok = pos => finish(resolve, {
+      lat: pos.coords.latitude.toFixed(6),
+      lng: pos.coords.longitude.toFixed(6),
+      accuracy: Math.round(pos.coords.accuracy),
+      ts: new Date().toISOString()
+    });
+    navigator.geolocation.getCurrentPosition(ok, err => {
+      if (err && err.code === 1) { finish(reject, err); return; }
+      navigator.geolocation.getCurrentPosition(ok, e2 => finish(reject, e2), { enableHighAccuracy: false, timeout: 15000, maximumAge: 60000 });
+    }, { enableHighAccuracy: true, timeout: 12000, maximumAge: 0 });
+  }).then(fix => {
+    fixInFlight = null;
+    state.liveGps = { lat: fix.lat, lng: fix.lng, accuracy: fix.accuracy, ts: fix.ts };
+    return fix;
+  }, err => { fixInFlight = null; throw err; });
+  return fixInFlight;
+}
+
+function setGateStatus(msg, kind) {
+  const el = document.getElementById('loc-gate-status');
+  el.className = 'loc-gate-status' + (kind ? ' ' + kind : '');
+  el.innerHTML = (kind ? '' : '<span class="loc-spin"></span>') + msg;
+}
+
+// mode: 'open' | 'resume' | 'clock-in'
+function requireLocation(mode) {
+  return new Promise((resolve, reject) => {
+    locGateResolve = resolve; locGateReject = reject; locGateMode = mode;
+    const gate = document.getElementById('loc-gate');
+    const texts = {
+      'open': 'Employee Portal records your location every time you open the app.',
+      'resume': 'Employee Portal records your location every time you come back to the app.',
+      'clock-in': 'Your location is recorded when you clock in.'
+    };
+    document.getElementById('loc-gate-title').textContent = 'Confirming your location';
+    document.getElementById('loc-gate-text').textContent = texts[mode] || texts.open;
+    document.getElementById('loc-gate-cancel').hidden = mode !== 'clock-in';
+    gate.hidden = false;
+    runGate();
+  });
+}
+
+function runGate() {
+  if (locGateBusy) return;
+  locGateBusy = true;
+  document.getElementById('loc-gate-retry').hidden = true;
+  setGateStatus('Getting your location…', '');
+  getFix().then(fix => {
+    locGateBusy = false;
+    state.liveGps = { lat: fix.lat, lng: fix.lng, accuracy: fix.accuracy, ts: fix.ts };
+    setGateStatus('Location confirmed', 'ok');
+    setTimeout(() => {
+      document.getElementById('loc-gate').hidden = true;
+      const r = locGateResolve; locGateResolve = locGateReject = null;
+      if (r) r(fix);
+    }, 450);
+  }).catch(err => {
+    locGateBusy = false;
+    const denied = err && err.code === 1;
+    document.getElementById('loc-gate-title').textContent = 'Location is required';
+    setGateStatus(denied
+      ? 'Location access is turned off. Allow location for Employee Portal in your phone settings, then tap Try again.'
+      : 'Couldn\'t get your location. Make sure Location is on and you have signal, then tap Try again.', 'error');
+    document.getElementById('loc-gate-retry').hidden = false;
+  });
+}
+
+function locGateRetry() { runGate(); }
+function locGateCancel() {
+  if (locGateMode !== 'clock-in') return;
+  document.getElementById('loc-gate').hidden = true;
+  const r = locGateReject; locGateResolve = locGateReject = null;
+  if (r) r(new Error('cancelled'));
+}
+
+function sendLocationEvent(type, fix, extra) {
+  const me = whoAmI();
+  const now = new Date();
+  const payload = Object.assign({
+    type: type,
+    name: me.name, id: me.id,
+    onShift: !!(state.clockInTime && state.screen === 'working'),
+    lat: fix ? fix.lat : null, lng: fix ? fix.lng : null, accuracy: fix ? fix.accuracy : null,
+    time: iso(now), date: dateStr(now)
+  }, extra || {});
+  if (!fix) { sendToSheets(type, payload); return; }
+  // Never let a slow street-address lookup hold up the location: send within 2.5s regardless
+  let sent = false;
+  const send = addr => { if (sent) return; sent = true; payload.address = addr || ''; sendToSheets(type, payload); };
+  setTimeout(() => send(''), 2500);
+  reverseGeocode(fix.lat, fix.lng, send);
+}
+
+// ── App open / resume ──
+let appOpenStarted = false;
+function appOpenCheck(reason) {
+  const blocked = () => {
+    const t = document.getElementById('modal-tnc'), h = document.getElementById('modal-home-screen');
+    const vis = el => el && !el.classList.contains('hidden') && getComputedStyle(el).display !== 'none';
+    return vis(t) || vis(h);
+  };
+  if (blocked()) { setTimeout(() => appOpenCheck(reason), 600); return; }
+  requireLocation(reason).then(fix => {
+    sendLocationEvent('APP_OPEN', fix, { reason: reason === 'resume' ? 'Returned to app' : 'Opened app' });
+  }).catch(() => {});
+}
+window.addEventListener('load', () => { if (!appOpenStarted) { appOpenStarted = true; setTimeout(() => appOpenCheck('open'), 900); } });
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') { appHiddenAt = Date.now(); return; }
+  if (appHiddenAt && Date.now() - appHiddenAt >= RESUME_RECHECK_MS && document.getElementById('loc-gate').hidden) {
+    appHiddenAt = null;
+    appOpenCheck('resume');
+  } else {
+    appHiddenAt = null;
+  }
+});
+
+// ── Clock-in: one button; a fresh location is required every time ──
+function beginClockIn() {
+  if (document.getElementById('btn-ci').disabled) return;
+  requireLocation('clock-in').then(fix => {
+    state.clockInFix = fix;
+    clockIn();
+  }).catch(() => {
+    showToast('Location is required to clock in');
+  });
+}
+
+// ══════════════════════════════════════════
+//  v2.1.3 — SITE NAME FROM GPS
+//  The first-job "Site" box can't be typed in. Capturing GPS looks up
+//  the business / place at that spot (free OpenStreetMap data) and fills
+//  it in. Falls back to the street address, then to GPS coordinates.
+// ══════════════════════════════════════════
+const SITE_POI_KEYS = 'shop|amenity|office|leisure|tourism|healthcare|club|craft';
+const SITE_SKIP = /^(parking|parking_space|parking_entrance|bench|waste_basket|waste_disposal|bicycle_parking|post_box|telephone|atm|vending_machine|toilets|drinking_water|recycling|charging_station|shelter|bbq|clock|fountain|letter_box|motorcycle_parking|taxi|bus_station|grit_bin|hunting_stand|picnic_table|playground|pitch|track|garden|park|common|dog_park|swimming_pool|slipway|marina|fitness_station)$/;
+
+function siteFetchJson(url, opts, ms) {
+  const ctl = ('AbortController' in window) ? new AbortController() : null;
+  const t = setTimeout(() => { if (ctl) ctl.abort(); }, ms);
+  return fetch(url, Object.assign({}, opts || {}, ctl ? { signal: ctl.signal } : {}))
+    .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .finally(() => clearTimeout(t));
+}
+
+function siteDistance(lat1, lng1, lat2, lng2) {
+  const R = 6371000, toR = d => d * Math.PI / 180;
+  const dLat = toR(lat2 - lat1), dLng = toR(lng2 - lng1);
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toR(lat1)) * Math.cos(toR(lat2)) * Math.sin(dLng / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(a));
+}
+
+function siteStreetFromNominatim(d) {
+  const a = (d && d.address) || {};
+  let street = '';
+  if (a.house_number && a.road) street = a.house_number + ' ' + a.road;
+  else if (a.road) street = a.road;
+  const suburb = a.suburb || a.city_district || a.town || a.city || a.village || '';
+  return [street, suburb].filter(Boolean).join(', ');
+}
+
+function siteIsPoi(tags) {
+  if (!tags || !tags.name) return false;
+  if (tags.amenity && SITE_SKIP.test(tags.amenity)) return false;
+  if (tags.leisure && SITE_SKIP.test(tags.leisure) && !tags.shop && !tags.amenity && !tags.office) return false;
+  return true;
+}
+
+async function lookupSite(lat, lng) {
+  lat = parseFloat(lat); lng = parseFloat(lng);
+  const nomUrl = `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}&zoom=18&addressdetails=1&namedetails=1`;
+  const q = `[out:json][timeout:8];
+is_in(${lat},${lng})->.a;
+area.a[name][~"^(${SITE_POI_KEYS}|building)$"~"."]->.enc;
+nwr(around:60,${lat},${lng})[name][~"^(${SITE_POI_KEYS})$"~"."]->.near;
+.enc out tags;
+.near out tags center;`;
+  const [nom, ovp] = await Promise.all([
+    siteFetchJson(nomUrl, { headers: { 'Accept-Language': 'en' } }, 8000).catch(() => null),
+    siteFetchJson('https://overpass-api.de/api/interpreter', { method: 'POST', body: 'data=' + encodeURIComponent(q), headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }, 10000).catch(() => null)
+  ]);
+  const street = siteStreetFromNominatim(nom);
+
+  let near = [], enclosing = [];
+  if (ovp && Array.isArray(ovp.elements)) {
+    ovp.elements.forEach(el => {
+      const tags = el.tags || {};
+      if (el.type === 'area') {
+        if (tags.name && !(tags.amenity && SITE_SKIP.test(tags.amenity))) enclosing.push(tags);
+        return;
+      }
+      if (!siteIsPoi(tags)) return;
+      const pLat = el.lat != null ? el.lat : (el.center && el.center.lat);
+      const pLng = el.lon != null ? el.lon : (el.center && el.center.lon);
+      if (pLat == null || pLng == null) return;
+      near.push({ name: tags.name, dist: siteDistance(lat, lng, pLat, pLng) });
+    });
+    near.sort((x, y) => x.dist - y.dist);
+    // A named business/place area (school, shopping centre, club) beats a plain named building
+    enclosing.sort((x, y) => (x.building && !x.shop && !x.amenity && !x.office ? 1 : 0) - (y.building && !y.shop && !y.amenity && !y.office ? 1 : 0));
+  }
+
+  if (near.length && near[0].dist <= 35) return { name: near[0].name, street, source: 'Nearest business (' + Math.round(near[0].dist) + ' m)' };
+  if (enclosing.length) return { name: enclosing[0].name, street, source: 'Inside named site' };
+  if (near.length) return { name: near[0].name, street, source: 'Nearest business (' + Math.round(near[0].dist) + ' m)' };
+  if (nom && nom.name && !/^(highway|place|boundary)$/.test(nom.category || '')) return { name: nom.name, street, source: 'Map listing' };
+  if (street) return { name: street, street, source: 'Street address (no business listed here)' };
+  return { name: `GPS ${lat.toFixed(5)}, ${lng.toFixed(5)}`, street: '', source: 'Coordinates only (offline)' };
+}
+
+let siteLookupSeq = 0;
+function fillSiteFromGps(lat, lng, st) {
+  const box = document.getElementById('job-address');
+  const sub = document.getElementById('site-street');
+  const seq = ++siteLookupSeq;
+  state.site = null;
+  box.value = '';
+  box.placeholder = 'Finding your site…';
+  box.className = 'ci2-input ci2-site finding';
+  sub.textContent = '';
+  checkReady();
+  lookupSite(lat, lng).then(site => {
+    if (seq !== siteLookupSeq) return;
+    state.site = site;
+    box.value = site.name;
+    box.placeholder = 'Filled in automatically from your GPS';
+    box.className = 'ci2-input ci2-site filled';
+    sub.textContent = site.street && site.street !== site.name ? site.street : '';
+    if (st) { st.className = 'loc-status'; st.textContent = '✓ Location captured'; }
+    checkReady();
+  });
+}
+
+// ══════════════════════════════════════════
+//  v2.2.0 — LINKED TO THE ADMIN APP
+//  Every 2 minutes (and whenever the app is opened) the app asks your
+//  Google Sheet whether the manager has changed this employee's shift:
+//   • shift clocked out by the manager → it ends here too (no second row)
+//   • start time changed by the manager → the timer follows it
+//   • manager clocked this employee in → the shift starts here
+// ══════════════════════════════════════════
+const ADMIN_SYNC_MS = 2 * 60 * 1000;
+let adminSyncTimer = null, adminSyncBusy = false;
+
+function adminSyncStart() {
+  if (adminSyncTimer) clearInterval(adminSyncTimer);
+  adminSyncTimer = setInterval(adminSync, ADMIN_SYNC_MS);
+  setTimeout(adminSync, 4000);
+}
+
+function adminSync() {
+  if (adminSyncBusy || document.visibilityState === 'hidden') return;
+  const onShift = !!(state.clockInTime && state.screen === 'working');
+  let params;
+  if (onShift) {
+    if (!state.shiftId || !state.employee || !state.employee.name) return;   // shift began before v2.2.0
+    params = { action: 'getMyShift', name: state.employee.name, id: state.employee.id || '', shiftId: state.shiftId };
+  } else if (state.screen === 'clockin' || state.screen === 'clockedout') {
+    const me = whoAmI();
+    if (!me.name) return;
+    params = { action: 'getMyShift', name: me.name, id: me.id || '' };
+  } else return;
+
+  adminSyncBusy = true;
+  const askedFor = onShift ? state.shiftId : null;
+  sheetsJsonp(params, data => {
+    adminSyncBusy = false;
+    if (!data || data.__error || !data.ok) return;
+    if (askedFor) {
+      if (!(state.clockInTime && state.screen === 'working' && state.shiftId === askedFor)) return;
+      const sh = data.shift;
+      if (!sh || sh.shiftId !== askedFor) return;
+      if (sh.status === 'closed' && sh.closedBy === 'admin') { endShiftFromAdmin(sh); return; }
+      const remoteIn = Date.parse(sh.clockIn);
+      if (remoteIn && Math.abs(remoteIn - new Date(state.clockInTime).getTime()) > 30000) applyAdminStartChange(remoteIn);
+    } else if (data.adminOpen && !(state.clockInTime && state.screen === 'working')) {
+      startShiftFromAdmin(data.adminOpen, params.name, params.id);
+    }
+  });
+}
+
+function startShiftFromAdmin(o, name, id) {
+  state.employee = { name: name, id: id, shift: o.shift || 'Regular' };
+  state.shiftId = o.shiftId;
+  state.clockInTime = new Date(o.clockIn);
+  state.breaks = []; state.totalBreakSecs = 0; state.onBreak = false; state.currentBreakStart = null;
+  state.reports = [];
+  state.gps = { lat: o.lat || null, lng: o.lng || null };
+  state.jobs = [{ address: o.address || 'Set by your manager', gps: { lat: o.lat || null, lng: o.lng || null }, time: state.clockInTime, active: true }];
+  state.startedByAdmin = true;
+
+  document.getElementById('work-employee-name').textContent = name;
+  document.getElementById('wi-name').textContent = name;
+  document.getElementById('wi-id').textContent = id;
+  document.getElementById('wi-clockin').textContent = fmt12(state.clockInTime);
+  document.getElementById('wi-shift').textContent = state.employee.shift;
+  document.getElementById('wi-break').textContent = '0:00';
+  document.querySelectorAll('.modal-overlay.open').forEach(m => m.classList.remove('open'));
+
+  renderJobs();
+  switchScreen('working');
+  startStopwatch();
+  updateBreakUI();
+  scheduleAutoClockOut();
+  startGPSTracking();
+  startAssignedJobsPolling();
+  updateOnClockStatus();
+  saveState();
+  clockInChime();
+  showToast('Your manager clocked you in from ' + fmt12(state.clockInTime));
+}
+
+function applyAdminStartChange(ms) {
+  state.clockInTime = new Date(ms);
+  if (state.jobs && state.jobs[0]) state.jobs[0].time = new Date(ms);
+  document.getElementById('wi-clockin').textContent = fmt12(state.clockInTime);
+  scheduleAutoClockOut();
+  renderJobs();
+  tick();
+  saveState();
+  showToast('Your manager changed your start time to ' + fmt12(state.clockInTime));
+}
+
+function endShiftFromAdmin(sh) {
+  const clockOutTime = new Date(sh.clockOut || Date.now());
+  if (state.onBreak && state.currentBreakStart) {
+    const end = Math.min(Date.now(), clockOutTime.getTime());
+    const breakSecs = Math.max(0, Math.floor((end - new Date(state.currentBreakStart).getTime()) / 1000));
+    state.totalBreakSecs += breakSecs;
+    state.breaks.push({ start: iso(new Date(state.currentBreakStart)), end: iso(new Date(end)), duration: breakSecs });
+    state.onBreak = false; state.currentBreakStart = null;
+  }
+  if (swInterval) clearInterval(swInterval);
+  _clearAutoClockOut();
+  stopGPSTracking();
+
+  // The manager's figure wins (it includes any break they set)
+  let workedSecs = Math.floor((clockOutTime - new Date(state.clockInTime)) / 1000) - state.totalBreakSecs;
+  const m = String(sh.worked || '').match(/^(\d+):(\d{2}):(\d{2})$/);
+  if (m) workedSecs = (+m[1]) * 3600 + (+m[2]) * 60 + (+m[3]);
+  workedSecs = Math.max(0, workedSecs);
+
+  document.querySelectorAll('.modal-overlay.open').forEach(x => x.classList.remove('open'));
+  document.getElementById('co-name').textContent = state.employee.name;
+  document.getElementById('co-hours').textContent = secToHMS(workedSecs);
+  document.getElementById('co-break').textContent = secToMS(state.totalBreakSecs);
+  document.getElementById('co-jobs').textContent = (state.jobs || []).length;
+  document.getElementById('co-time').textContent = fmt12(clockOutTime) + ' (by manager)';
+
+  recordShiftToTimesheets({
+    employeeName:    state.employee.name,
+    employeeId:      state.employee.id,
+    date:            dateStr(clockOutTime),
+    clockIn:         fmt12(new Date(state.clockInTime)),
+    clockOut:        fmt12(clockOutTime) + ' (by manager)',
+    clockInISO:      new Date(state.clockInTime).toISOString(),
+    totalWorked:     secToHMS(workedSecs),
+    totalWorkedSecs: workedSecs,
+    totalBreak:      secToMS(state.totalBreakSecs),
+    totalBreakSecs:  state.totalBreakSecs,
+    jobs:            (state.jobs || []).map(j => ({ address: j.address, time: fmt12(new Date(j.time)) }))
+  });
+
+  clockOutChime();
+  clearState();
+  stopAssignedJobsPolling();
+  switchScreen('clockedout');
+  updateOnClockStatus();
+  showToast('Your manager clocked you out at ' + fmt12(clockOutTime));
+}
+
+window.addEventListener('load', adminSyncStart);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') setTimeout(adminSync, 1500); });
 
 // ══════════════════════════════════════════
 //  MODAL HELPERS
@@ -4460,7 +4646,7 @@ function shareTimesheetWhatsApp(app) {
 
   lines.push('\n─────────────────────────');
   lines.push(`*Total Hours (${recent.length} shift${recent.length !== 1 ? 's' : ''}, ${periodLabel}): ${secToHMS(totalSecs)}*`);
-  lines.push('\n_Sent via Employee Portal App v2.0.1_');
+  lines.push('\n_Sent via Employee Portal App v2.2.0_');
 
   const text = encodeURIComponent(lines.join('\n'));
 
@@ -4628,11 +4814,42 @@ const APP_UPDATES = [
     id: 'update-012',
     version: 'v2.0.1',
     title: 'Consistent Look Everywhere',
-    isNew: true,
+    isNew: false,
     features: [
       { icon: '🎨', text: 'Menu, Inbox, Timesheets, Reports and every pop-up now match the new clean design', badge: true },
       { icon: '✅', text: 'New end-of-shift summary with your total hours front and centre', badge: true },
       { icon: '🔕', text: 'Calmer menu — no more flashing; a small dot shows when something is new' },
+    ]
+  },
+  {
+    id: 'update-014',
+    version: 'v2.1.2',
+    title: 'Location Confirmed',
+    isNew: false,
+    features: [
+      { icon: '📍', text: 'Your location is now confirmed every time you open the app, clock in and clock out', badge: true },
+      { icon: '⏱️', text: 'Clock in and clock out with one tap — your location is captured automatically', badge: true },
+    ]
+  },
+  {
+    id: 'update-015',
+    version: 'v2.1.4',
+    title: 'Site Filled In Automatically',
+    isNew: false,
+    features: [
+      { icon: '📍', text: 'Tap Capture GPS and your site is filled in for you — no typing the address', badge: true },
+      { icon: '🏢', text: 'Shows the name of the business or place you\'re at, with the street address underneath', badge: true },
+    ]
+  },
+  {
+    id: 'update-017',
+    version: 'v2.2.0',
+    title: 'Linked With Your Manager',
+    isNew: true,
+    features: [
+      { icon: '🔗', text: 'If you forget to clock in or out, your manager can do it for you — the app updates by itself', badge: true },
+      { icon: '🕘', text: 'If your manager corrects your start time, your shift timer updates to match', badge: true },
+      { icon: '🔕', text: 'No more check-in pop-ups during your shift' },
     ]
   }
 ];
@@ -5380,7 +5597,9 @@ if('serviceWorker' in navigator){
   const swUrl=URL.createObjectURL(blob);
   window.addEventListener('load',async()=>{
     try{
-      const reg=await navigator.serviceWorker.register(swUrl,{scope:'./'});
+      let reg;
+      try { reg=await navigator.serviceWorker.register('./sw.js',{scope:'./'}); }
+      catch(e1){ reg=await navigator.serviceWorker.register(swUrl,{scope:'./'}); }
       reg.update();setInterval(()=>reg.update(),60000);
       reg.addEventListener('updatefound',()=>{
         const nw=reg.installing;
